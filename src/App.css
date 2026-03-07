@@ -136,9 +136,17 @@ h1 {
   font-size: 0.9rem;
 }
 
+/* Checkbox 大小優化 */
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--secondary);
+}
+
 /* Sidebar Summary - 字體統一 */
 .summary-card h3, .details-card h3 {
-  font-size: 0.95rem; /* 統一標題字體 */
+  font-size: 0.95rem;
   margin: 0 0 1rem 0;
   color: var(--secondary);
   text-transform: uppercase;
@@ -149,7 +157,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.6rem;
-  font-size: 0.9rem; /* 統一內文字體 */
+  font-size: 0.95rem; /* 微調數據區塊字體 */
 }
 
 .res-val {
@@ -163,8 +171,9 @@ h1 {
   border-top: 1px solid var(--border);
 }
 
+/* Gross Total 數字與上方一致 */
 .res-val-lg {
-  font-size: 1.3rem;
+  font-size: 0.95rem; 
   color: var(--secondary);
   font-weight: 700;
 }
@@ -175,7 +184,7 @@ h1 {
   gap: 1rem;
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--border);
-  font-size: 0.9rem; /* 統一內文字體 */
+  font-size: 0.9rem;
 }
 
 .b-day { font-weight: bold; min-width: 40px; }
@@ -201,7 +210,7 @@ h1 {
   color: #0f172a;
   width: 48px;
   height: 48px;
-  border-radius: 50%; /* 圓形 Logo 更有政府感 */
+  border-radius: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
