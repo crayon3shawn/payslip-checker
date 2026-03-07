@@ -107,7 +107,7 @@ function App() {
 
   const t = {
     en: {
-      title: 'AU Payslip Check',
+      title: 'AU Payslip Checker',
       rate: 'Hourly Rate',
       on: 'ON',
       day: 'DAY',
@@ -115,35 +115,35 @@ function App() {
       end: 'END',
       break: 'Unpaid Break',
       holiday: 'Holiday',
-      summary: 'Pay Summary',
+      summary: 'Pay Overview',
       ord: 'Ordinary',
       ot: 'Overtime (1.5x)',
       hol: 'Holiday (2x)',
       gross: 'Gross Total',
       details: 'Daily Log',
-      fairwork: 'Fair Work Website',
-      howItWorks: 'Calculation Logic',
+      fairwork: 'Visit Fair Work Website',
+      howItWorks: 'Calculation Rules',
       note1: 'Ordinary: Max 7.6h / day.',
       note2: 'Overtime: Applied after 7.6h.',
       note3: 'Unpaid Break: Fixed 0.5h meal break.'
     },
     tw: {
-      title: 'AU Payslip Check',
+      title: 'AU Payslip Checker',
       rate: '基本時薪',
-      on: '上班',
-      day: '日期',
-      start: '上班',
-      end: '下班',
+      on: 'ON',
+      day: '星期',
+      start: '上班打卡',
+      end: '下班打卡',
       break: '無薪休息',
       holiday: '國定假日',
-      summary: '薪資總結',
+      summary: '薪資總覽',
       ord: '普通工時',
       ot: '加班 (1.5x)',
       hol: '假日 (2x)',
       gross: '稅前總額',
       details: '每日明細',
-      fairwork: 'Fair Work 官網',
-      howItWorks: '計算邏輯說明',
+      fairwork: '造訪 Fair Work 官網',
+      howItWorks: '計算規則',
       note1: '普通工時：每日最高 7.6 小時。',
       note2: '加班時數：每日超過 7.6 小時部分。',
       note3: '無薪休息：固定扣除 0.5 小時用餐時間。'
@@ -277,9 +277,9 @@ function App() {
           <div className="logic-card flat-block">
             <h3>{cur.howItWorks}</h3>
             <div className="note-group">
-              <p className="note">• {cur.note1}</p>
-              <p className="note">• {cur.note2}</p>
-              <p className="note">• {cur.note3}</p>
+              <p className="note highlight">• {cur.note1}</p>
+              <p className="note highlight">• {cur.note2}</p>
+              <p className="note highlight">• {cur.note3}</p>
             </div>
           </div>
           
@@ -297,7 +297,7 @@ function App() {
           </div>
           <div className="footer-right">
             <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
-            <span className="v-tag">v1.3.8</span>
+            <span className="v-tag">v1.3.9</span>
           </div>
         </div>
       </footer>
