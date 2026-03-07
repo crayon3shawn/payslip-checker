@@ -30,49 +30,28 @@ header {
   margin-bottom: 2rem;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
 h1 {
   color: var(--primary);
   margin: 0;
   font-size: 1.6rem;
 }
 
-.header-fw-link {
+.header-right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
+}
+
+.header-link {
+  color: #8b949e;
   text-decoration: none;
-  background: #1e293b;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid #334155;
-  color: #94a3b8;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-size: 0.85rem;
+  transition: color 0.2s;
 }
 
-.header-fw-link:hover {
-  border-color: var(--primary);
-  color: white;
-}
-
-.au-gov-icon {
-  background: white;
-  color: #004a99;
-  font-size: 0.6rem;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-weight: 900;
+.header-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
 }
 
 .lang-toggle {
@@ -152,7 +131,7 @@ h1 {
 .time-input { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 0.5rem; border-radius: 6px; width: 75px; text-align: center; font-size: 0.9rem; }
 input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 
-/* Sidebar Summary - 字體統一 */
+/* Sidebar Summary */
 .summary-card h3, .details-card h3, .logic-card h3 {
   font-size: 0.9rem;
   margin: 0 0 1rem 0;
@@ -177,7 +156,7 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 }
 
 .res-val-uniform {
-  font-size: 0.9rem; /* 強制與上方一致 */
+  font-size: 0.9rem;
   color: var(--secondary);
   font-weight: 700;
 }
@@ -198,7 +177,7 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 /* Logic Card */
 .note { font-size: 0.75rem; color: #666; margin: 0.4rem 0; line-height: 1.4; }
 
-/* Footer - 開源風格 */
+/* Footer */
 .version-footer {
   margin-top: 4rem;
   padding: 2rem 0;

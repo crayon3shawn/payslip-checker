@@ -121,7 +121,7 @@ function App() {
       hol: 'Holiday (2x)',
       gross: 'Gross Total',
       details: 'Daily Log',
-      fairwork: 'Fair Work',
+      fairwork: 'Visit Fair Work',
       howItWorks: 'Calculation Logic',
       note1: 'Ordinary: Max 7.6h / day.',
       note2: 'Overtime: Applied after 7.6h.',
@@ -142,7 +142,7 @@ function App() {
       hol: '假日 (2x)',
       gross: '稅前總額',
       details: '每日明細',
-      fairwork: 'Fair Work',
+      fairwork: '造訪 Fair Work',
       howItWorks: '計算邏輯說明',
       note1: '普通工時：每日最高 7.6 小時。',
       note2: '加班時數：每日超過 7.6 小時部分。',
@@ -155,16 +155,15 @@ function App() {
   return (
     <div className="container">
       <header>
-        <div className="header-left">
-          <h1>{cur.title}</h1>
-          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="header-fw-link">
-             <div className="au-gov-icon">AU</div>
-             <span>{cur.fairwork}</span>
+        <h1>{cur.title}</h1>
+        <div className="header-right">
+          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="header-link">
+             {cur.fairwork}
           </a>
+          <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
+            {lang === 'en' ? '繁體中文' : 'English'}
+          </button>
         </div>
-        <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
-          {lang === 'en' ? '繁體中文' : 'English'}
-        </button>
       </header>
 
       <div className="main-layout">
@@ -286,12 +285,12 @@ function App() {
       <footer className="version-footer">
         <div className="footer-content">
           <div className="footer-left">
-            <p className="footer-tag">Open Source Project | MIT Licensed</p>
-            <p className="privacy-note">All data is saved locally in your browser.</p>
+            <p className="footer-tag">Open Source Project | CC0 1.0 Universal</p>
+            <p className="privacy-note">No data is collected. Everything stays in your browser.</p>
           </div>
           <div className="footer-right">
-            <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">View on GitHub</a>
-            <span className="v-tag">v1.3.5</span>
+            <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
+            <span className="v-tag">v1.3.6</span>
           </div>
         </div>
       </footer>
