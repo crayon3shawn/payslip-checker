@@ -186,12 +186,12 @@ function App() {
             <table className="record-table">
               <thead>
                 <tr>
-                  <th className="center" width="50">{cur.on}</th>
-                  <th className="center" width="60">{cur.day}</th>
+                  <th className="center" style={{ width: "50px" }}>{cur.on}</th>
+                  <th className="center" style={{ width: "60px" }}>{cur.day}</th>
                   <th className="center">{cur.start}</th>
                   <th className="center">{cur.end}</th>
-                  <th className="center" width="80">{cur.break}</th>
-                  <th className="center" width="80">{cur.holiday}</th>
+                  <th className="center" style={{ width: "80px" }}>{cur.break}</th>
+                  <th className="center" style={{ width: "80px" }}>{cur.holiday}</th>
                 </tr>
               </thead>
               <tbody>
