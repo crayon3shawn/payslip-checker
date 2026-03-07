@@ -1,3 +1,5 @@
+import { AU_REGS } from '../constants/regulations';
+
 export interface DailyRecord {
   id: number;
   enabled: boolean;
@@ -23,7 +25,7 @@ export const getResults = (records: DailyRecord[], hourlyRate: number) => {
 
   records.filter(r => r.enabled).forEach(r => {
     let dailyGross = calculateHours(r.startTime, r.endTime);
-    let netHours = Math.max(0, dailyGross - (r.unpaidBreak ? 0.5 : 0));
+    let netHours = Math.max(0, dailyGross - (r.unpaidBreak ? AU_REGS.UNPAID_BREAK_DURATION : 0));
 
     let ordinary = 0;
     let ot = 0;
@@ -32,9 +34,9 @@ export const getResults = (records: DailyRecord[], hourlyRate: number) => {
     if (r.isHoliday) {
       holiday = netHours;
     } else {
-      if (netHours > 7.6) {
-        ordinary = 7.6;
-        ot = netHours - 7.6;
+      if (netHours > AU_REGS.DAILY_ORDINARY_LIMIT) {
+        ordinary = AU_REGS.DAILY_ORDINARY_LIMIT;
+        ot = netHours - AU_REGS.DAILY_ORDINARY_LIMIT;
       } else {
         ordinary = netHours;
       }
@@ -57,11 +59,10 @@ export const getResults = (records: DailyRecord[], hourlyRate: number) => {
   totalHolidayHours = Math.round(totalHolidayHours * 100) / 100;
 
   const grossPay = (totalOrdinaryHours * hourlyRate) + 
-                   (totalOT15xHours * hourlyRate * 1.5) + 
-                   (totalHolidayHours * hourlyRate * 2.0);
+                   (totalOT15xHours * hourlyRate * AU_REGS.OT_MULTIPLIER) + 
+                   (totalHolidayHours * hourlyRate * AU_REGS.HOLIDAY_MULTIPLIER);
 
-  // 2025-26 Standard Super Rate
-  const superGuarantee = grossPay * 0.12;
+  const superGuarantee = grossPay * AU_REGS.SUPER_GUARANTEE_RATE;
 
   return { 
     totalOrdinaryHours, 
