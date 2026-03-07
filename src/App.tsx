@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-
-interface DailyRecord {
-  id: number;
-  day: string;
-  dayCn: string;
-  enabled: boolean;
-  startTime: string;
-  endTime: string;
-  unpaidBreak: boolean;
-  isHoliday: boolean;
-}
+import { DailyRecord, getResults } from './utils/calculator';
 
 const DAYS = [
   { id: 1, en: 'Mon', cn: '週一' },
@@ -22,13 +12,19 @@ const DAYS = [
   { id: 7, en: 'Sun', cn: '週日' },
 ];
 
+// Extend DailyRecord for UI
+interface UIRecord extends DailyRecord {
+  day: string;
+  dayCn: string;
+}
+
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [hourlyRate, setHourlyRate] = useState<number>(() => {
     const saved = localStorage.getItem('hourlyRate');
     return saved ? parseFloat(saved) : 31.19;
   });
-  const [records, setRecords] = useState<DailyRecord[]>(() => {
+  const [records, setRecords] = useState<UIRecord[]>(() => {
     return DAYS.map((d) => ({
       id: d.id,
       day: d.en,
@@ -45,65 +41,11 @@ function App() {
     localStorage.setItem('hourlyRate', hourlyRate.toString());
   }, [hourlyRate]);
 
-  const handleChange = (id: number, field: keyof DailyRecord, value: any) => {
+  const handleChange = (id: number, field: keyof UIRecord, value: any) => {
     setRecords(records.map(r => r.id === id ? { ...r, [field]: value } : r));
   };
 
-  const calculateHours = (start: string, end: string) => {
-    const [sH, sM] = start.split(':').map(Number);
-    const [eH, eM] = end.split(':').map(Number);
-    let diff = (eH + eM / 60) - (sH + sM / 60);
-    if (diff < 0) diff += 24; 
-    return diff;
-  };
-
-  const getResults = () => {
-    let totalOrdinaryHours = 0;
-    let totalOT15xHours = 0;
-    let totalHolidayHours = 0;
-    let breakdown: any[] = [];
-
-    records.filter(r => r.enabled).forEach(r => {
-      let dailyGross = calculateHours(r.startTime, r.endTime);
-      let netHours = dailyGross - (r.unpaidBreak ? 0.5 : 0);
-      if (netHours < 0) netHours = 0;
-
-      let ordinary = 0;
-      let ot = 0;
-      let holiday = 0;
-
-      if (r.isHoliday) {
-        holiday = netHours;
-      } else {
-        if (netHours > 7.6) {
-          ordinary = 7.6;
-          ot = netHours - 7.6;
-        } else {
-          ordinary = netHours;
-        }
-      }
-
-      totalOrdinaryHours += ordinary;
-      totalOT15xHours += ot;
-      totalHolidayHours += holiday;
-
-      breakdown.push({
-        day: lang === 'en' ? r.day : r.dayCn,
-        net: netHours.toFixed(1),
-        ord: ordinary.toFixed(1),
-        ot: ot.toFixed(1),
-        hol: holiday.toFixed(1)
-      });
-    });
-
-    const grossPay = (totalOrdinaryHours * hourlyRate) + 
-                     (totalOT15xHours * hourlyRate * 1.5) + 
-                     (totalHolidayHours * hourlyRate * 2.0);
-
-    return { totalOrdinaryHours, totalOT15xHours, totalHolidayHours, grossPay, breakdown };
-  };
-
-  const results = getResults();
+  const results = getResults(records, hourlyRate);
 
   const t = {
     en: {
@@ -165,6 +107,20 @@ function App() {
 
       <div className="main-layout">
         <section className="input-section">
+          <div className="config-card">
+            <div className="input-group full-width">
+              <label>{cur.rate}:</label>
+              <div className="input-with-symbol">
+                <span>$</span>
+                <input 
+                  type="number" 
+                  value={hourlyRate} 
+                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="table-wrapper">
             <table className="record-table">
               <thead>
@@ -266,7 +222,7 @@ function App() {
               {results.breakdown.length === 0 && <p className="empty-msg">No entries</p>}
               {results.breakdown.map((b, i) => (
                 <div key={i} className="b-item">
-                  <span className="b-day">{b.day}</span>
+                  <span className="b-day">{(records[i] as any).day || 'Day'}</span>
                   <span className="b-val">{b.net}h</span>
                   <span className="b-tag">Ord:{b.ord} | OT:{b.ot} | H:{b.hol}</span>
                 </div>
