@@ -102,17 +102,27 @@ h1 {
   font-size: 1rem;
 }
 
-/* Table */
+/* Table - 移除垂直欄位線與標題背景 */
+.record-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .record-table th {
-  background: #21262d;
+  background: transparent; /* 移除深色背景 */
   color: #8b949e;
   font-size: 0.75rem;
-  padding: 0.8rem;
+  padding: 1.2rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .record-table td {
-  padding: 0.6rem 0.4rem;
+  padding: 0.8rem 0.4rem;
   border-bottom: 1px solid var(--border);
+  border-left: none; /* 強制確保無垂直線 */
+  border-right: none;
 }
 
 .center { text-align: center; }
@@ -136,15 +146,15 @@ h1 {
   font-size: 0.9rem;
 }
 
-/* Checkbox 大小優化 */
+/* Checkbox - 還原為系統預設顏色 */
 input[type="checkbox"] {
   width: 22px;
   height: 22px;
   cursor: pointer;
-  accent-color: var(--secondary);
+  /* 移除 accent-color，回歸系統預設 */
 }
 
-/* Sidebar Summary - 字體統一 */
+/* Sidebar Summary */
 .summary-card h3, .details-card h3 {
   font-size: 0.95rem;
   margin: 0 0 1rem 0;
@@ -157,7 +167,7 @@ input[type="checkbox"] {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.6rem;
-  font-size: 0.95rem; /* 微調數據區塊字體 */
+  font-size: 0.95rem;
 }
 
 .res-val {
@@ -171,7 +181,6 @@ input[type="checkbox"] {
   border-top: 1px solid var(--border);
 }
 
-/* Gross Total 數字與上方一致 */
 .res-val-lg {
   font-size: 0.95rem; 
   color: var(--secondary);
@@ -189,7 +198,7 @@ input[type="checkbox"] {
 
 .b-day { font-weight: bold; min-width: 40px; }
 .b-val { color: var(--primary); min-width: 45px; text-align: right; }
-.b-tag { color: #888; font-size: 0.75rem; }
+.b-tag { color: #888; font-size: 0.8rem; }
 
 .note { font-size: 0.75rem; color: #666; margin: 0.2rem 0; }
 
