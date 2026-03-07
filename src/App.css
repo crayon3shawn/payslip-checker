@@ -8,6 +8,7 @@
   --holiday: #2a1b1b;
   --disabled: #16191d;
   --input-bg: #24292f;
+  --shadow: rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -20,20 +21,14 @@ body {
 .container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.brand {
-  display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -52,16 +47,16 @@ h1 {
   letter-spacing: 1px;
 }
 
-.lang-toggle {
-  background: transparent;
+/* Sidebar & Cards */
+.shadow-block {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
   border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow); /* 增加陰影強化區塊感 */
+  margin-bottom: 1rem;
 }
 
-/* Layout */
 .main-layout {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -73,69 +68,28 @@ h1 {
   .main-layout { grid-template-columns: 1fr; }
 }
 
-/* Config */
-.config-card {
-  background: var(--card-bg);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  margin-bottom: 1rem;
-}
-
-.input-with-symbol {
-  display: inline-flex;
-  align-items: center;
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0 0.6rem;
-}
-
-.input-with-symbol input {
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 0.6rem 0.2rem;
-  width: 70px;
-  outline: none;
-  font-size: 1rem;
-}
-
-/* Table */
+/* Table Wrapper */
 .table-wrapper {
   background: var(--card-bg);
   border-radius: 12px;
   border: 1px solid var(--border);
+  box-shadow: 0 4px 12px var(--shadow);
   overflow: hidden;
-}
-
-.record-table {
-  width: 100%;
-  border-collapse: collapse;
 }
 
 .record-table th {
   background: #21262d;
   color: #8b949e;
   font-size: 0.7rem;
-  padding: 0.8rem;
+  padding: 1rem;
 }
 
 .record-table td {
-  padding: 0.6rem 0.4rem;
+  padding: 0.8rem 0.4rem;
   border-bottom: 1px solid var(--border);
 }
 
 .center { text-align: center; }
-
-.day-name { font-weight: bold; color: var(--secondary); }
-
-.disabled-row {
-  background: var(--disabled);
-  opacity: 0.4;
-}
-
-.holiday-row { background: var(--holiday); }
 
 .time-input {
   background: var(--input-bg);
@@ -143,69 +97,72 @@ h1 {
   color: white;
   padding: 0.5rem;
   border-radius: 6px;
-  width: 70px;
+  width: 75px;
   text-align: center;
-  font-family: monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.time-input:focus {
-  border-color: var(--primary);
-  outline: none;
-}
-
-/* Sidebar */
-.sidebar {
+/* Summary Alignment */
+.result-grid {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
 }
 
-.summary-card, .details-card {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+.res-item.align-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.res-item.total strong {
-  font-size: 2rem;
+.res-val {
+  min-width: 60px; /* 確保小時數對齊 */
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--primary);
+}
+
+.res-item.total {
+  margin-top: 0.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.res-item.total .res-val {
+  font-size: 1.6rem;
   color: var(--secondary);
 }
 
-.b-item {
+/* Daily Log Alignment */
+.b-item.align-left {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
+  gap: 0.8rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--border);
+  align-items: center;
 }
 
-.empty-msg { color: #666; text-align: center; padding: 1rem; }
+.b-day { width: 40px; font-weight: bold; }
+.b-val { width: 45px; color: var(--primary); font-family: 'JetBrains Mono', monospace; text-align: right; }
+.b-tag { color: #888; font-size: 0.75rem; }
+
+.note-group {
+  margin-top: 1rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 0.8rem;
+}
+
+.note { font-size: 0.75rem; color: #666; margin: 0.3rem 0; }
 
 /* FW Card */
 .fw-card {
   background: #1e293b;
   padding: 1.2rem;
   border-radius: 12px;
-  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 1rem;
   border: 1px solid #334155;
+  text-decoration: none;
+  box-shadow: 0 4px 12px var(--shadow);
 }
-
-.fw-logo {
-  background: var(--secondary);
-  color: #0f172a;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 900;
-  font-size: 1.3rem;
-}
-
-.fw-text strong { color: white; display: block; font-size: 0.9rem; }
-.fw-text span { color: #94a3b8; font-size: 0.75rem; }

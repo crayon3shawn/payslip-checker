@@ -5,7 +5,7 @@ interface DailyRecord {
   id: number;
   day: string;
   dayCn: string;
-  enabled: boolean; // 新增：是否上班
+  enabled: boolean;
   startTime: string;
   endTime: string;
   unpaidBreak: boolean;
@@ -33,7 +33,7 @@ function App() {
       id: d.id,
       day: d.en,
       dayCn: d.cn,
-      enabled: d.id <= 5, // 預設週一到五上班
+      enabled: d.id <= 5,
       startTime: '09:00',
       endTime: '17:00',
       unpaidBreak: true,
@@ -107,7 +107,7 @@ function App() {
 
   const t = {
     en: {
-      title: 'AU Payslip Pro',
+      title: 'AU Payslip Check',
       rate: 'Hourly Rate',
       day: 'DAY',
       on: 'ON',
@@ -122,10 +122,11 @@ function App() {
       gross: 'Gross Total',
       details: 'Daily Log',
       link: 'Fair Work Official Site',
-      note: 'OT: >7.6h daily. Break: 0.5h unpaid meal break.'
+      note1: 'OT starts after 7.6h daily.',
+      note2: 'Break: 0.5h unpaid meal break.'
     },
     cn: {
-      title: '澳洲薪資專家',
+      title: 'AU Payslip Check',
       rate: '基本時薪',
       day: '日期',
       on: '上班',
@@ -140,7 +141,8 @@ function App() {
       gross: '稅前總額',
       details: '每日明細',
       link: 'Fair Work 官方網站',
-      note: '加班：每日超過 7.6h。用餐：扣除 0.5h 不計薪休息。'
+      note1: '加班：每日超過 7.6h。',
+      note2: '用餐：扣除 0.5h 不計薪休息。'
     }
   };
 
@@ -151,7 +153,7 @@ function App() {
       <header>
         <div className="brand">
           <h1>{cur.title}</h1>
-          <span className="badge">v1.2 AU AWARD</span>
+          <span className="badge">v1.3 AU AWARD</span>
         </div>
         <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}>
           {lang === 'en' ? '繁體中文' : 'English'}
@@ -227,32 +229,44 @@ function App() {
         </section>
 
         <aside className="sidebar">
-          <div className="summary-card">
+          <div className="summary-card shadow-block">
             <h2>{cur.summary}</h2>
             <div className="result-grid">
-              <div className="res-item"><span>{cur.ord}:</span> <strong>{results.totalOrdinaryHours.toFixed(1)}h</strong></div>
-              <div className="res-item"><span>{cur.ot}:</span> <strong>{results.totalOT15xHours.toFixed(1)}h</strong></div>
-              <div className="res-item"><span>{cur.hol}:</span> <strong>{results.totalHolidayHours.toFixed(1)}h</strong></div>
+              <div className="res-item align-between">
+                <span>{cur.ord}:</span> 
+                <strong className="res-val">{results.totalOrdinaryHours.toFixed(1)}h</strong>
+              </div>
+              <div className="res-item align-between">
+                <span>{cur.ot}:</span> 
+                <strong className="res-val">{results.totalOT15xHours.toFixed(1)}h</strong>
+              </div>
+              <div className="res-item align-between">
+                <span>{cur.hol}:</span> 
+                <strong className="res-val">{results.totalHolidayHours.toFixed(1)}h</strong>
+              </div>
               <div className="res-item total">
                 <span>{cur.gross}</span>
-                <strong>${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+                <strong className="res-val">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
           </div>
 
-          <div className="details-card">
+          <div className="details-card shadow-block">
             <h3>{cur.details}</h3>
             <div className="breakdown-list">
               {results.breakdown.length === 0 && <p className="empty-msg">No entries</p>}
               {results.breakdown.map((b, i) => (
-                <div key={i} className="b-item">
+                <div key={i} className="b-item align-left">
                   <span className="b-day">{b.day}</span>
                   <span className="b-val">{b.net}h</span>
                   <span className="b-tag">Ord:{b.ord} | OT:{b.ot} | H:{b.hol}</span>
                 </div>
               ))}
             </div>
-            <p className="note">{cur.note}</p>
+            <div className="note-group">
+              <p className="note">• {cur.note1}</p>
+              <p className="note">• {cur.note2}</p>
+            </div>
           </div>
 
           <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-card">
