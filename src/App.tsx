@@ -124,7 +124,8 @@ function App() {
       link: 'Official Website',
       note1: 'OT starts after 7.6h daily.',
       note2: 'Break: 0.5h unpaid meal break.',
-      footer: 'AU Fair Work Standard'
+      footer: 'Open Source Project | MIT Licensed',
+      privacy: 'Privacy: All data is saved locally in your browser.'
     },
     cn: {
       title: 'AU Payslip Check',
@@ -144,7 +145,8 @@ function App() {
       link: '官方網站',
       note1: '加班：每日超過 7.6h。',
       note2: '用餐：扣除 0.5h 不計薪休息。',
-      footer: '符合澳洲 Fair Work 標準'
+      footer: '開源專案 | MIT 授權協議',
+      privacy: '隱私：所有數據僅儲存於您的瀏覽器。'
     }
   };
 
@@ -283,7 +285,11 @@ function App() {
       
       <footer className="version-footer">
         <p>{cur.footer}</p>
-        <span>v1.3.2</span>
+        <p className="privacy-note">{cur.privacy}</p>
+        <div className="footer-links">
+           <a href="#" className="github-link">GitHub</a>
+           <span>v1.3.3</span>
+        </div>
       </footer>
     </div>
   );

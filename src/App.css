@@ -43,7 +43,6 @@ h1 {
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
 }
 
 /* Layout */
@@ -58,7 +57,6 @@ h1 {
   .main-layout { grid-template-columns: 1fr; }
 }
 
-/* Blocks */
 .config-card, .table-wrapper, .flat-block {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -66,183 +64,83 @@ h1 {
   margin-bottom: 1rem;
 }
 
-.config-card {
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-}
-
-.flat-block {
-  padding: 1.2rem;
-}
+.config-card { padding: 1rem 1.5rem; display: flex; align-items: center; }
+.flat-block { padding: 1.2rem; }
 
 /* Hourly Rate */
-.input-group label {
-  margin-right: 1.5rem;
-  font-weight: 600;
-  color: var(--secondary);
-}
+.input-group label { margin-right: 1.5rem; font-weight: 600; color: var(--secondary); }
+.input-with-symbol { display: inline-flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0 0.8rem; }
+.input-with-symbol input { background: transparent; border: none; color: white; padding: 0.6rem 0.2rem; width: 80px; outline: none; font-size: 1rem; }
 
-.input-with-symbol {
-  display: inline-flex;
-  align-items: center;
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0 0.8rem;
-}
-
-.input-with-symbol input {
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 0.6rem 0.2rem;
-  width: 80px;
-  outline: none;
-  font-size: 1rem;
-}
-
-/* Table - 移除垂直欄位線與標題背景 */
-.record-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.record-table th {
-  background: transparent; /* 移除深色背景 */
-  color: #8b949e;
-  font-size: 0.75rem;
-  padding: 1.2rem 0.8rem;
-  border-bottom: 1px solid var(--border);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.record-table td {
-  padding: 0.8rem 0.4rem;
-  border-bottom: 1px solid var(--border);
-  border-left: none; /* 強制確保無垂直線 */
-  border-right: none;
-}
-
+/* Table */
+.record-table { width: 100%; border-collapse: collapse; }
+.record-table th { background: transparent; color: #8b949e; font-size: 0.75rem; padding: 1.2rem 0.8rem; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.5px; }
+.record-table td { padding: 0.8rem 0.4rem; border-bottom: 1px solid var(--border); }
 .center { text-align: center; }
 .day-name { font-weight: bold; color: var(--secondary); }
-
-.disabled-row {
-  background: var(--disabled);
-  opacity: 0.3;
-}
-
+.disabled-row { background: var(--disabled); opacity: 0.3; }
 .holiday-row { background: var(--holiday); }
+.time-input { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 0.5rem; border-radius: 6px; width: 75px; text-align: center; font-size: 0.9rem; }
+input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 
-.time-input {
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  color: white;
-  padding: 0.5rem;
-  border-radius: 6px;
-  width: 75px;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-/* Checkbox - 還原為系統預設顏色 */
-input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  /* 移除 accent-color，回歸系統預設 */
-}
-
-/* Sidebar Summary */
-.summary-card h3, .details-card h3 {
-  font-size: 0.95rem;
-  margin: 0 0 1rem 0;
-  color: var(--secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.res-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.6rem;
-  font-size: 0.95rem;
-}
-
-.res-val {
-  color: var(--primary);
-  font-weight: 500;
-}
-
-.res-item.total {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.res-val-lg {
-  font-size: 0.95rem; 
-  color: var(--secondary);
-  font-weight: 700;
-}
-
-/* Daily Log */
-.b-item {
-  display: flex;
-  gap: 1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
-}
-
+/* Sidebar */
+.summary-card h3, .details-card h3 { font-size: 0.95rem; margin: 0 0 1rem 0; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.res-item { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.95rem; }
+.res-val { color: var(--primary); font-weight: 500; }
+.res-item.total { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.res-val-lg { font-size: 0.95rem; color: var(--secondary); font-weight: 700; }
+.b-item { display: flex; gap: 1rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 .b-day { font-weight: bold; min-width: 40px; }
 .b-val { color: var(--primary); min-width: 45px; text-align: right; }
 .b-tag { color: #888; font-size: 0.8rem; }
-
 .note { font-size: 0.75rem; color: #666; margin: 0.2rem 0; }
 
-/* AU GOV Card */
-.fw-card {
-  background: #1e293b;
-  padding: 1rem;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid #334155;
-  text-decoration: none;
-}
-
-.fw-logo {
-  background: white;
-  color: #0f172a;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  line-height: 1;
-  flex-shrink: 0;
-  border: 2px solid #004a99;
-}
-
+/* FW Card */
+.fw-card { background: #1e293b; padding: 1rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem; border: 1px solid #334155; text-decoration: none; }
+.fw-logo { background: white; color: #0f172a; width: 48px; height: 48px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; line-height: 1; flex-shrink: 0; border: 2px solid #004a99; }
 .au-text { font-weight: 900; font-size: 0.8rem; }
 .gov-text { font-weight: 700; font-size: 0.6rem; border-top: 1px solid #004a99; margin-top: 2px; padding-top: 2px; }
-
 .fw-text { display: flex; flex-direction: column; }
 .fw-text strong { color: white; font-size: 0.9rem; margin-bottom: 2px; }
 .fw-text span { color: #94a3b8; font-size: 0.75rem; }
 
-/* Footer */
+/* Version Footer */
 .version-footer {
   text-align: center;
-  margin-top: 3rem;
-  padding: 2rem 0;
+  margin-top: 4rem;
+  padding: 2.5rem 0;
   border-top: 1px solid var(--border);
-  color: #555;
+  color: #666;
 }
-.version-footer p { margin: 0; font-size: 0.85rem; }
-.version-footer span { font-size: 0.7rem; }
+
+.version-footer p { margin: 0.3rem 0; font-size: 0.85rem; }
+
+.privacy-note {
+  font-size: 0.75rem !important;
+  color: #444;
+  font-style: italic;
+}
+
+.footer-links {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.github-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.github-link:hover {
+  text-decoration: underline;
+}
+
+.footer-links span {
+  font-size: 0.75rem;
+  color: #333;
+}
