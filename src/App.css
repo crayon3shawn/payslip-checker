@@ -12,8 +12,7 @@
 
 body {
   margin: 0;
-  /* 回歸系統預設字體，確保各平台顯示正常 */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   background-color: var(--bg);
   color: var(--text);
 }
@@ -44,6 +43,7 @@ h1 {
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 0.85rem;
 }
 
 /* Layout */
@@ -58,7 +58,7 @@ h1 {
   .main-layout { grid-template-columns: 1fr; }
 }
 
-/* Blocks (扁平化設計，移除陰影) */
+/* Blocks */
 .config-card, .table-wrapper, .flat-block {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -67,16 +67,16 @@ h1 {
 }
 
 .config-card {
-  padding: 1.2rem 1.5rem;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
 }
 
 .flat-block {
-  padding: 1.5rem;
+  padding: 1.2rem;
 }
 
-/* Hourly Rate Input 修復 */
+/* Hourly Rate */
 .input-group label {
   margin-right: 1.5rem;
   font-weight: 600;
@@ -92,11 +92,6 @@ h1 {
   padding: 0 0.8rem;
 }
 
-.input-with-symbol span {
-  color: #888;
-  margin-right: 0.4rem;
-}
-
 .input-with-symbol input {
   background: transparent;
   border: none;
@@ -107,33 +102,20 @@ h1 {
   font-size: 1rem;
 }
 
-/* 移除數字微調按鈕 */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 /* Table */
-.record-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
 .record-table th {
   background: #21262d;
   color: #8b949e;
   font-size: 0.75rem;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 
 .record-table td {
-  padding: 0.8rem 0.4rem;
+  padding: 0.6rem 0.4rem;
   border-bottom: 1px solid var(--border);
 }
 
 .center { text-align: center; }
-
 .day-name { font-weight: bold; color: var(--secondary); }
 
 .disabled-row {
@@ -151,24 +133,28 @@ input::-webkit-inner-spin-button {
   border-radius: 6px;
   width: 75px;
   text-align: center;
+  font-size: 0.9rem;
 }
 
-input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
+/* Sidebar Summary - 字體統一 */
+.summary-card h3, .details-card h3 {
+  font-size: 0.95rem; /* 統一標題字體 */
+  margin: 0 0 1rem 0;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Sidebar Summary */
 .res-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem; /* 統一內文字體 */
 }
 
 .res-val {
   color: var(--primary);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .res-item.total {
@@ -177,34 +163,31 @@ input[type="checkbox"] {
   border-top: 1px solid var(--border);
 }
 
-.res-item.total .res-val {
-  font-size: 1.4rem; /* 縮小金額字體 */
+.res-val-lg {
+  font-size: 1.3rem;
   color: var(--secondary);
+  font-weight: 700;
 }
 
 /* Daily Log */
 .b-item {
   display: flex;
   gap: 1rem;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
+  font-size: 0.9rem; /* 統一內文字體 */
 }
 
 .b-day { font-weight: bold; min-width: 40px; }
 .b-val { color: var(--primary); min-width: 45px; text-align: right; }
-.b-tag { color: #888; font-size: 0.8rem; }
+.b-tag { color: #888; font-size: 0.75rem; }
 
-.note-group {
-  margin-top: 1rem;
-}
+.note { font-size: 0.75rem; color: #666; margin: 0.2rem 0; }
 
-.note { font-size: 0.75rem; color: #666; margin: 0.3rem 0; }
-
-/* FW Card (移除陰影) */
+/* AU GOV Card */
 .fw-card {
   background: #1e293b;
-  padding: 1.2rem;
+  padding: 1rem;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -214,29 +197,34 @@ input[type="checkbox"] {
 }
 
 .fw-logo {
-  background: var(--secondary);
+  background: white;
   color: #0f172a;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; /* 圓形 Logo 更有政府感 */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-weight: 900;
-  font-size: 1.3rem;
+  line-height: 1;
+  flex-shrink: 0;
+  border: 2px solid #004a99;
 }
 
-.fw-text strong { color: white; font-size: 0.9rem; }
+.au-text { font-weight: 900; font-size: 0.8rem; }
+.gov-text { font-weight: 700; font-size: 0.6rem; border-top: 1px solid #004a99; margin-top: 2px; padding-top: 2px; }
+
+.fw-text { display: flex; flex-direction: column; }
+.fw-text strong { color: white; font-size: 0.9rem; margin-bottom: 2px; }
 .fw-text span { color: #94a3b8; font-size: 0.75rem; }
 
-/* Version Footer */
+/* Footer */
 .version-footer {
   text-align: center;
-  margin-top: 4rem;
+  margin-top: 3rem;
   padding: 2rem 0;
   border-top: 1px solid var(--border);
-  color: #666;
+  color: #555;
 }
-
-.version-footer p { margin: 0; font-size: 0.9rem; }
-.version-footer span { font-size: 0.75rem; }
+.version-footer p { margin: 0; font-size: 0.85rem; }
+.version-footer span { font-size: 0.7rem; }

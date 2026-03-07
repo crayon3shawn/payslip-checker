@@ -121,7 +121,7 @@ function App() {
       hol: 'Holiday',
       gross: 'Gross Total',
       details: 'Daily Log',
-      link: 'Fair Work Official Site',
+      link: 'Official Website',
       note1: 'OT starts after 7.6h daily.',
       note2: 'Break: 0.5h unpaid meal break.',
       footer: 'AU Fair Work Standard'
@@ -141,7 +141,7 @@ function App() {
       hol: '假日工時',
       gross: '稅前總額',
       details: '每日明細',
-      link: 'Fair Work 官方網站',
+      link: '官方網站',
       note1: '加班：每日超過 7.6h。',
       note2: '用餐：扣除 0.5h 不計薪休息。',
       footer: '符合澳洲 Fair Work 標準'
@@ -229,7 +229,7 @@ function App() {
 
         <aside className="sidebar">
           <div className="summary-card flat-block">
-            <h2>{cur.summary}</h2>
+            <h3>{cur.summary}</h3>
             <div className="result-grid">
               <div className="res-item">
                 <span>{cur.ord}:</span> 
@@ -245,7 +245,7 @@ function App() {
               </div>
               <div className="res-item total">
                 <span>{cur.gross}</span>
-                <strong className="res-val">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+                <strong className="res-val-lg">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
           </div>
@@ -269,7 +269,10 @@ function App() {
           </div>
 
           <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-card">
-             <div className="fw-logo">FW</div>
+             <div className="fw-logo">
+                <span className="au-text">AU</span>
+                <span className="gov-text">GOV</span>
+             </div>
              <div className="fw-text">
                <strong>Fair Work Ombudsman</strong>
                <span>{cur.link}</span>
@@ -280,7 +283,7 @@ function App() {
       
       <footer className="version-footer">
         <p>{cur.footer}</p>
-        <span>v1.3.1</span>
+        <span>v1.3.2</span>
       </footer>
     </div>
   );
