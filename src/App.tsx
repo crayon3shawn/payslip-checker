@@ -121,11 +121,7 @@ function App() {
       hol: 'Holiday',
       gross: 'Gross Total',
       details: 'Daily Log',
-      link: 'Official Website',
-      note1: 'OT starts after 7.6h daily.',
-      note2: 'Break: 0.5h unpaid meal break.',
-      footer: 'Open Source Project | MIT Licensed',
-      privacy: 'Privacy: All data is saved locally in your browser.'
+      link: 'Official Website'
     },
     cn: {
       title: 'AU Payslip Check',
@@ -142,11 +138,7 @@ function App() {
       hol: '假日工時',
       gross: '稅前總額',
       details: '每日明細',
-      link: '官方網站',
-      note1: '加班：每日超過 7.6h。',
-      note2: '用餐：扣除 0.5h 不計薪休息。',
-      footer: '開源專案 | MIT 授權協議',
-      privacy: '隱私：所有數據僅儲存於您的瀏覽器。'
+      link: '官方網站'
     }
   };
 
@@ -264,10 +256,6 @@ function App() {
                 </div>
               ))}
             </div>
-            <div className="note-group">
-              <p className="note">• {cur.note1}</p>
-              <p className="note">• {cur.note2}</p>
-            </div>
           </div>
 
           <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-card">
@@ -284,11 +272,11 @@ function App() {
       </div>
       
       <footer className="version-footer">
-        <p>{cur.footer}</p>
-        <p className="privacy-note">{cur.privacy}</p>
+        <p>Open Source Project | MIT Licensed</p>
+        <p className="privacy-note">Privacy: All data is saved locally in your browser.</p>
         <div className="footer-links">
-           <a href="#" className="github-link">GitHub</a>
-           <span>v1.3.3</span>
+           <a href="https://github.com/chengche/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
+           <span>v1.3.4</span>
         </div>
       </footer>
     </div>
