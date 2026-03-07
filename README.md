@@ -8,10 +8,6 @@
 
 ---
 
-## 📖 Introduction
-
-Tired of manual math to check if your employer paid you correctly? **AU Payslip Checker** is designed for Australian workers to quickly verify their weekly pay. It handles complex daily overtime rules and the latest 12% Superannuation contributions automatically.
-
 ## 🖥️ Preview
 
 <img width="100%" alt="AU Payslip Checker Preview" src="https://github.com/user-attachments/assets/45cba4d5-e82e-44df-ac43-57322f1de7f1" />
@@ -56,6 +52,3 @@ src/
 ## 📄 License
 
 Licensed under **CC BY 4.0**. Free to use and share with attribution.
-
----
-Crafted with ❤️ by **chengche**
