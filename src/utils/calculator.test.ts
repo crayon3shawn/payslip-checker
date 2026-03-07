@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getResults, DailyRecord } from './calculator';
+import { getResults, type DailyRecord } from './calculator';
 
 describe('AU Payslip Calculator Logic', () => {
   const hourlyRate = 30;

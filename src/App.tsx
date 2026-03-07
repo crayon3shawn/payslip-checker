@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { DailyRecord, getResults } from './utils/calculator';
+import { type DailyRecord, getResults } from './utils/calculator';
 
 const DAYS = [
   { id: 1, en: 'Mon', cn: '週一' },
