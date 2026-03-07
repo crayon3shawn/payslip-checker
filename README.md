@@ -1,3 +1,20 @@
+# 🇦🇺 AU Payslip Checker
+  
+   > A minimalist, privacy-first tool to verify Australian payslips based on
+     2025 Fair Work standards.
+   
+   [![License: CC BY
+     4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https
+     ://creativecommons.org/licenses/by/4.0/)
+   [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react
+     &logoColor=61DAFB)](https://reactjs.org/)
+   [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&lo
+     goColor=white)](https://vitejs.dev/)
+
+<img width="2468" height="1526" alt="CleanShot 2026-03-08 at 10 16 38@2x" src="https://github.com/user-attachments/assets/45cba4d5-e82e-44df-ac43-57322f1de7f1" />
+
+--
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
