@@ -26,7 +26,7 @@ function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [hourlyRate, setHourlyRate] = useState<number>(() => {
     const saved = localStorage.getItem('hourlyRate');
-    return saved ? parseFloat(saved) : 30;
+    return saved ? parseFloat(saved) : 31.19;
   });
   const [records, setRecords] = useState<DailyRecord[]>(() => {
     return DAYS.map((d) => ({

@@ -10,17 +10,27 @@
   --input-bg: #24292f;
 }
 
-body {
+/* Fix mobile overflow background issue */
+html, body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  padding: 0;
   background-color: var(--bg);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; /* Prevent body horizontal scroll */
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem 1rem;
+  box-sizing: border-box;
 }
 
 header {
@@ -28,6 +38,8 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 h1 {
@@ -39,7 +51,7 @@ h1 {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .header-link {
@@ -51,7 +63,6 @@ h1 {
 
 .header-link:hover {
   color: var(--primary);
-  text-decoration: underline;
 }
 
 .lang-toggle {
@@ -73,10 +84,11 @@ h1 {
 }
 
 @media (max-width: 950px) {
-  .main-layout { grid-template-columns: 1fr; }
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Blocks */
 .config-card, .table-wrapper, .flat-block {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -120,18 +132,61 @@ h1 {
   font-size: 1rem;
 }
 
-/* Table */
-.record-table { width: 100%; border-collapse: collapse; }
-.record-table th { background: transparent; color: #8b949e; font-size: 0.75rem; padding: 1.2rem 0.8rem; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.5px; }
-.record-table td { padding: 0.8rem 0.4rem; border-bottom: 1px solid var(--border); }
+/* Table - Allow internal scroll instead of breaking body layout */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.record-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px; /* Ensure table doesn't get too squashed */
+}
+
+.record-table th {
+  background: transparent;
+  color: #8b949e;
+  font-size: 0.75rem;
+  padding: 1.2rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.record-table td {
+  padding: 0.8rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
 .center { text-align: center; }
 .day-name { font-weight: bold; color: var(--secondary); }
-.disabled-row { background: var(--disabled); opacity: 0.3; }
-.holiday-row { background: var(--holiday); }
-.time-input { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 0.5rem; border-radius: 6px; width: 75px; text-align: center; font-size: 0.9rem; }
-input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 
-/* Sidebar Summary */
+.disabled-row {
+  background: var(--disabled);
+  opacity: 0.3;
+}
+
+.holiday-row { background: var(--holiday); }
+
+.time-input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  width: 75px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+/* Sidebar */
 .summary-card h3, .details-card h3, .logic-card h3 {
   font-size: 0.9rem;
   margin: 0 0 1rem 0;
@@ -161,7 +216,6 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
   font-weight: 700;
 }
 
-/* Daily Log */
 .b-item {
   display: flex;
   gap: 1rem;
@@ -174,7 +228,6 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 .b-val { color: var(--primary); min-width: 45px; text-align: right; }
 .b-tag { color: #888; font-size: 0.75rem; }
 
-/* Logic Card */
 .note { font-size: 0.75rem; color: #666; margin: 0.4rem 0; line-height: 1.4; }
 
 /* Footer */
@@ -191,7 +244,11 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
 }
 
 @media (max-width: 600px) {
-  .footer-content { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
 }
 
 .footer-tag { margin: 0; font-size: 0.85rem; color: #888; font-weight: 600; }
@@ -210,5 +267,4 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
   font-weight: 600;
 }
 
-.github-link:hover { text-decoration: underline; }
 .v-tag { font-size: 0.75rem; color: #333; }
