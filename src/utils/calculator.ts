@@ -52,7 +52,6 @@ export const getResults = (records: DailyRecord[], hourlyRate: number) => {
     });
   });
 
-  // Use Math.round to handle floating point issues for total hours
   totalOrdinaryHours = Math.round(totalOrdinaryHours * 100) / 100;
   totalOT15xHours = Math.round(totalOT15xHours * 100) / 100;
   totalHolidayHours = Math.round(totalHolidayHours * 100) / 100;
@@ -61,5 +60,15 @@ export const getResults = (records: DailyRecord[], hourlyRate: number) => {
                    (totalOT15xHours * hourlyRate * 1.5) + 
                    (totalHolidayHours * hourlyRate * 2.0);
 
-  return { totalOrdinaryHours, totalOT15xHours, totalHolidayHours, grossPay, breakdown };
+  // 2025-26 Standard Super Rate
+  const superGuarantee = grossPay * 0.12;
+
+  return { 
+    totalOrdinaryHours, 
+    totalOT15xHours, 
+    totalHolidayHours, 
+    grossPay, 
+    superGuarantee,
+    breakdown 
+  };
 };

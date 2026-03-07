@@ -58,16 +58,18 @@ function App() {
       break: 'Unpaid Break',
       holiday: 'Holiday',
       summary: 'Pay Overview',
-      ord: 'Ordinary',
-      ot: 'Overtime (1.5x)',
+      ord: 'ORD',
+      ot: 'OT (1.5x)',
       hol: 'Holiday (2x)',
       gross: 'Gross Total',
-      details: 'Daily Log',
+      super: 'Super (12%)',
+      details: 'Daily Hours',
       fairwork: 'Visit Fair Work Website',
       howItWorks: 'Calculation Rules',
-      note1: 'Ordinary: Max 7.6h / day.',
-      note2: 'Overtime: Applied after 7.6h.',
-      note3: 'Unpaid Break: Fixed 0.5h meal break.'
+      note1: 'ORD: Max 7.6h / day.',
+      note2: 'OT: Applied after 7.6h.',
+      note3: 'Unpaid Break: Fixed 0.5h meal break.',
+      privacy: 'No data leaves your device. Local only.'
     },
     tw: {
       title: 'AU Payslip Checker',
@@ -79,16 +81,18 @@ function App() {
       break: '無薪休息',
       holiday: '國定假日',
       summary: '薪資總覽',
-      ord: '普通工時',
+      ord: '普通',
       ot: '加班 (1.5x)',
       hol: '假日 (2x)',
       gross: '稅前總額',
-      details: '每日明細',
+      super: '退休金 (12%)',
+      details: '每日時數',
       fairwork: '造訪 Fair Work 官網',
       howItWorks: '計算規則',
-      note1: '普通工時：每日最高 7.6 小時。',
-      note2: '加班時數：每日超過 7.6 小時部分。',
-      note3: '無薪休息：固定扣除 0.5 小時用餐時間。'
+      note1: '普通：每日最高 7.6 小時。',
+      note2: '加班：每日超過 7.6 小時部分。',
+      note3: '無薪休息：固定扣除 0.5 小時用餐時間。',
+      privacy: '數據不離身。僅在本地瀏覽器計算。'
     }
   };
 
@@ -166,16 +170,12 @@ function App() {
         </section>
 
         <aside className="sidebar">
-          <div className="config-card sidebar-card">
-            <div className="input-group full-width">
-              <label>{cur.rate}:</label>
+          <div className="sidebar-card">
+            <h3>{cur.rate}</h3>
+            <div className="input-group full-width no-label">
               <div className="input-with-symbol">
                 <span>$</span>
-                <input 
-                  type="number" 
-                  value={hourlyRate} 
-                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
-                />
+                <input type="number" value={hourlyRate} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
               </div>
             </div>
           </div>
@@ -184,20 +184,28 @@ function App() {
             <h3>{cur.summary}</h3>
             <div className="result-grid">
               <div className="res-item">
-                <span>{cur.ord}:</span> 
+                <span className="res-label">{cur.ord}</span>
                 <strong className="res-val">{results.totalOrdinaryHours.toFixed(1)}h</strong>
               </div>
               <div className="res-item">
-                <span>{cur.ot}:</span> 
+                <span className="res-label">{cur.ot}</span>
                 <strong className="res-val">{results.totalOT15xHours.toFixed(1)}h</strong>
               </div>
               <div className="res-item">
-                <span>{cur.hol}:</span> 
+                <span className="res-label">{cur.hol}</span>
                 <strong className="res-val">{results.totalHolidayHours.toFixed(1)}h</strong>
               </div>
-              <div className="res-item total">
-                <span>{cur.gross}:</span>
+              
+              <div className="separator-line"></div>
+              
+              <div className="res-item accent-row">
+                <span className="res-label">{cur.gross}</span>
                 <strong className="res-val-uniform">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+              </div>
+              
+              <div className="res-item">
+                <span className="res-label">{cur.super}</span>
+                <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
           </div>
@@ -210,7 +218,7 @@ function App() {
                 <div key={i} className="b-item">
                   <span className="b-day">{(records[i] as any).day || 'Day'}</span>
                   <span className="b-val">{b.net}h</span>
-                  <span className="b-tag">Ord:{b.ord} | OT:{b.ot} | H:{b.hol}</span>
+                  <span className="b-tag">{cur.ord}:{b.ord} | {lang === 'en' ? 'OT' : '加班'}:{b.ot} | {lang === 'en' ? 'H' : '假'}:{b.hol}</span>
                 </div>
               ))}
             </div>
@@ -232,14 +240,20 @@ function App() {
       </div>
       
       <footer className="version-footer">
-        <div className="footer-content">
-          <div className="footer-left">
-            <p className="footer-tag">Open Source Project | CC0 1.0 Universal</p>
-            <p className="privacy-note">No data is collected. Everything stays in your browser.</p>
+        <div className="footer-centered-content">
+          <div className="footer-row main-line">
+            <span>© 2026 chengche</span>
+            <span className="dot">·</span>
+            <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link-with-icon" target="_blank" rel="noreferrer">
+              <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+              GitHub
+            </a>
+            <span className="dot">·</span>
+            <span className="v-tag-small">v1.4.6</span>
           </div>
-          <div className="footer-right">
-            <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
-            <span className="v-tag">v1.3.9</span>
+          <p className="privacy-msg-en">{cur.privacy}</p>
+          <div className="footer-row license-line">
+            <span>Licensed under CC BY 4.0</span>
           </div>
         </div>
       </footer>
