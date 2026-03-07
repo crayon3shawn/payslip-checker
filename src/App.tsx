@@ -107,20 +107,6 @@ function App() {
 
       <div className="main-layout">
         <section className="input-section">
-          <div className="config-card">
-            <div className="input-group full-width">
-              <label>{cur.rate}:</label>
-              <div className="input-with-symbol">
-                <span>$</span>
-                <input 
-                  type="number" 
-                  value={hourlyRate} 
-                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
-                />
-              </div>
-            </div>
-          </div>
-
           <div className="table-wrapper">
             <table className="record-table">
               <thead>
