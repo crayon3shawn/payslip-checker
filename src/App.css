@@ -64,15 +64,16 @@ h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
 @media (max-width: 950px) { .main-layout { grid-template-columns: 1fr; } }
 
 /* Shared Block Styles */
-.sidebar-card, .table-wrapper, .flat-block {
+.sidebar-card, .summary-card, .details-card, .logic-card, .table-wrapper {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 1rem;
 }
 
-.sidebar-card { padding: 1rem 1.2rem; }
-.flat-block { padding: 1.2rem; }
+.sidebar-card, .summary-card, .details-card, .logic-card {
+  padding: 1.2rem;
+}
 
 /* Hourly Rate */
 .input-group.full-width { display: flex; justify-content: space-between; align-items: center; width: 100%; }
