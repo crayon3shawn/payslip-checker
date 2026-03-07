@@ -23,7 +23,7 @@ const DAYS = [
 ];
 
 function App() {
-  const [lang, setLang] = useState<'en' | 'cn'>('en');
+  const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [hourlyRate, setHourlyRate] = useState<number>(() => {
     const saved = localStorage.getItem('hourlyRate');
     return saved ? parseFloat(saved) : 30;
@@ -117,13 +117,17 @@ function App() {
       holiday: 'PUBLIC HOLIDAY',
       summary: 'Pay Summary',
       ord: 'Ordinary',
-      ot: 'Overtime',
-      hol: 'Holiday',
+      ot: 'Overtime (1.5x)',
+      hol: 'Holiday (2x)',
       gross: 'Gross Total',
       details: 'Daily Log',
-      link: 'Official Website'
+      fairwork: 'Fair Work',
+      howItWorks: 'Calculation Logic',
+      note1: 'Ordinary: Max 7.6h / day.',
+      note2: 'Overtime: Applied after 7.6h.',
+      note3: 'Unpaid Break: Fixed 0.5h meal break.'
     },
-    cn: {
+    tw: {
       title: 'AU Payslip Check',
       rate: '基本時薪',
       day: '日期',
@@ -134,11 +138,15 @@ function App() {
       holiday: '國定假日',
       summary: '薪資總結',
       ord: '普通工時',
-      ot: '加班時數',
-      hol: '假日工時',
+      ot: '加班 (1.5x)',
+      hol: '假日 (2x)',
       gross: '稅前總額',
       details: '每日明細',
-      link: '官方網站'
+      fairwork: 'Fair Work',
+      howItWorks: '計算邏輯說明',
+      note1: '普通工時：每日最高 7.6 小時。',
+      note2: '加班時數：每日超過 7.6 小時部分。',
+      note3: '不計薪休息：固定扣除 0.5 小時用餐時間。'
     }
   };
 
@@ -147,8 +155,14 @@ function App() {
   return (
     <div className="container">
       <header>
-        <h1>{cur.title}</h1>
-        <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}>
+        <div className="header-left">
+          <h1>{cur.title}</h1>
+          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="header-fw-link">
+             <div className="au-gov-icon">AU</div>
+             <span>{cur.fairwork}</span>
+          </a>
+        </div>
+        <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
           {lang === 'en' ? '繁體中文' : 'English'}
         </button>
       </header>
@@ -238,8 +252,8 @@ function App() {
                 <strong className="res-val">{results.totalHolidayHours.toFixed(1)}h</strong>
               </div>
               <div className="res-item total">
-                <span>{cur.gross}</span>
-                <strong className="res-val-lg">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+                <span>{cur.gross}:</span>
+                <strong className="res-val-uniform">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
           </div>
@@ -258,25 +272,27 @@ function App() {
             </div>
           </div>
 
-          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-card">
-             <div className="fw-logo">
-                <span className="au-text">AU</span>
-                <span className="gov-text">GOV</span>
-             </div>
-             <div className="fw-text">
-               <strong>Fair Work Ombudsman</strong>
-               <span>{cur.link}</span>
-             </div>
-          </a>
+          <div className="logic-card flat-block">
+            <h3>{cur.howItWorks}</h3>
+            <div className="note-group">
+              <p className="note">• {cur.note1}</p>
+              <p className="note">• {cur.note2}</p>
+              <p className="note">• {cur.note3}</p>
+            </div>
+          </div>
         </aside>
       </div>
       
       <footer className="version-footer">
-        <p>Open Source Project | MIT Licensed</p>
-        <p className="privacy-note">Privacy: All data is saved locally in your browser.</p>
-        <div className="footer-links">
-           <a href="https://github.com/chengche/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
-           <span>v1.3.4</span>
+        <div className="footer-content">
+          <div className="footer-left">
+            <p className="footer-tag">Open Source Project | MIT Licensed</p>
+            <p className="privacy-note">All data is saved locally in your browser.</p>
+          </div>
+          <div className="footer-right">
+            <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">View on GitHub</a>
+            <span className="v-tag">v1.3.5</span>
+          </div>
         </div>
       </footer>
     </div>
