@@ -109,19 +109,19 @@ function App() {
     en: {
       title: 'AU Payslip Check',
       rate: 'Hourly Rate',
-      day: 'DAY',
       on: 'ON',
+      day: 'DAY',
       start: 'START',
       end: 'END',
-      break: 'UNPAID BREAK',
-      holiday: 'PUBLIC HOLIDAY',
+      break: 'Unpaid Break',
+      holiday: 'Holiday',
       summary: 'Pay Summary',
       ord: 'Ordinary',
       ot: 'Overtime (1.5x)',
       hol: 'Holiday (2x)',
       gross: 'Gross Total',
       details: 'Daily Log',
-      fairwork: 'Visit Fair Work',
+      fairwork: 'Fair Work Website',
       howItWorks: 'Calculation Logic',
       note1: 'Ordinary: Max 7.6h / day.',
       note2: 'Overtime: Applied after 7.6h.',
@@ -130,11 +130,11 @@ function App() {
     tw: {
       title: 'AU Payslip Check',
       rate: '基本時薪',
-      day: '日期',
       on: '上班',
-      start: '上班時間',
-      end: '下班時間',
-      break: '扣除用餐',
+      day: '日期',
+      start: '上班',
+      end: '下班',
+      break: '無薪休息',
       holiday: '國定假日',
       summary: '薪資總結',
       ord: '普通工時',
@@ -142,11 +142,11 @@ function App() {
       hol: '假日 (2x)',
       gross: '稅前總額',
       details: '每日明細',
-      fairwork: '造訪 Fair Work',
+      fairwork: 'Fair Work 官網',
       howItWorks: '計算邏輯說明',
       note1: '普通工時：每日最高 7.6 小時。',
       note2: '加班時數：每日超過 7.6 小時部分。',
-      note3: '不計薪休息：固定扣除 0.5 小時用餐時間。'
+      note3: '無薪休息：固定扣除 0.5 小時用餐時間。'
     }
   };
 
@@ -157,31 +157,14 @@ function App() {
       <header>
         <h1>{cur.title}</h1>
         <div className="header-right">
-          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="header-link">
-             {cur.fairwork}
-          </a>
-          <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
-            {lang === 'en' ? '繁體中文' : 'English'}
+          <button className="lang-toggle-circle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
+            {lang === 'en' ? '中' : 'EN'}
           </button>
         </div>
       </header>
 
       <div className="main-layout">
         <section className="input-section">
-          <div className="config-card">
-            <div className="input-group">
-              <label>{cur.rate}:</label>
-              <div className="input-with-symbol">
-                <span>$</span>
-                <input 
-                  type="number" 
-                  value={hourlyRate} 
-                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
-                />
-              </div>
-            </div>
-          </div>
-
           <div className="table-wrapper">
             <table className="record-table">
               <thead>
@@ -197,11 +180,11 @@ function App() {
               <tbody>
                 {records.map(r => (
                   <tr key={r.id} className={`${r.enabled ? '' : 'disabled-row'} ${r.isHoliday ? 'holiday-row' : ''}`}>
-                    <td className="center">
+                    <td className="center cell-on">
                       <input type="checkbox" checked={r.enabled} onChange={() => handleChange(r.id, 'enabled', !r.enabled)} />
                     </td>
-                    <td className="day-name center">{lang === 'en' ? r.day : r.dayCn}</td>
-                    <td className="center">
+                    <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
+                    <td className="center cell-start">
                       <input 
                         type="text" 
                         value={r.startTime} 
@@ -211,7 +194,7 @@ function App() {
                         onChange={(e) => handleChange(r.id, 'startTime', e.target.value)} 
                       />
                     </td>
-                    <td className="center">
+                    <td className="center cell-end">
                       <input 
                         type="text" 
                         value={r.endTime} 
@@ -221,11 +204,17 @@ function App() {
                         onChange={(e) => handleChange(r.id, 'endTime', e.target.value)} 
                       />
                     </td>
-                    <td className="center">
-                      <input type="checkbox" disabled={!r.enabled} checked={r.unpaidBreak} onChange={() => handleChange(r.id, 'unpaidBreak', !r.unpaidBreak)} />
+                    <td className="center cell-break">
+                      <label className="checkbox-label">
+                        <input type="checkbox" disabled={!r.enabled} checked={r.unpaidBreak} onChange={() => handleChange(r.id, 'unpaidBreak', !r.unpaidBreak)} />
+                        <span className="mobile-only-text">{cur.break}</span>
+                      </label>
                     </td>
-                    <td className="center">
-                      <input type="checkbox" disabled={!r.enabled} checked={r.isHoliday} onChange={() => handleChange(r.id, 'isHoliday', !r.isHoliday)} />
+                    <td className="center cell-holiday">
+                      <label className="checkbox-label">
+                        <input type="checkbox" disabled={!r.enabled} checked={r.isHoliday} onChange={() => handleChange(r.id, 'isHoliday', !r.isHoliday)} />
+                        <span className="mobile-only-text">{cur.holiday}</span>
+                      </label>
                     </td>
                   </tr>
                 ))}
@@ -235,6 +224,20 @@ function App() {
         </section>
 
         <aside className="sidebar">
+          <div className="config-card sidebar-card">
+            <div className="input-group full-width">
+              <label>{cur.rate}:</label>
+              <div className="input-with-symbol">
+                <span>$</span>
+                <input 
+                  type="number" 
+                  value={hourlyRate} 
+                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="summary-card flat-block">
             <h3>{cur.summary}</h3>
             <div className="result-grid">
@@ -279,6 +282,10 @@ function App() {
               <p className="note">• {cur.note3}</p>
             </div>
           </div>
+          
+          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-minimal-link">
+             {cur.fairwork} →
+          </a>
         </aside>
       </div>
       
@@ -290,7 +297,7 @@ function App() {
           </div>
           <div className="footer-right">
             <a href="https://github.com/crayon3shawn/payslip-checker" className="github-link" target="_blank" rel="noreferrer">GitHub Repo</a>
-            <span className="v-tag">v1.3.6</span>
+            <span className="v-tag">v1.3.8</span>
           </div>
         </div>
       </footer>
