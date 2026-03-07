@@ -1,14 +1,12 @@
 # 🇦🇺 AU Payslip Checker
 
-> A minimalist, privacy-first tool to verify Australian payslips based on 2025 Fair Work standards.
+A minimalist, privacy-first tool to verify Australian payslips based on 2025 Fair Work standards.
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 
 ---
-
-## 🖥️ Preview
 
 <img width="100%" alt="AU Payslip Checker Preview" src="https://github.com/user-attachments/assets/45cba4d5-e82e-44df-ac43-57322f1de7f1" />
 
