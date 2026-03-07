@@ -123,7 +123,8 @@ function App() {
       details: 'Daily Log',
       link: 'Fair Work Official Site',
       note1: 'OT starts after 7.6h daily.',
-      note2: 'Break: 0.5h unpaid meal break.'
+      note2: 'Break: 0.5h unpaid meal break.',
+      footer: 'AU Fair Work Standard'
     },
     cn: {
       title: 'AU Payslip Check',
@@ -142,7 +143,8 @@ function App() {
       details: '每日明細',
       link: 'Fair Work 官方網站',
       note1: '加班：每日超過 7.6h。',
-      note2: '用餐：扣除 0.5h 不計薪休息。'
+      note2: '用餐：扣除 0.5h 不計薪休息。',
+      footer: '符合澳洲 Fair Work 標準'
     }
   };
 
@@ -151,10 +153,7 @@ function App() {
   return (
     <div className="container">
       <header>
-        <div className="brand">
-          <h1>{cur.title}</h1>
-          <span className="badge">v1.3 AU AWARD</span>
-        </div>
+        <h1>{cur.title}</h1>
         <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}>
           {lang === 'en' ? '繁體中文' : 'English'}
         </button>
@@ -229,18 +228,18 @@ function App() {
         </section>
 
         <aside className="sidebar">
-          <div className="summary-card shadow-block">
+          <div className="summary-card flat-block">
             <h2>{cur.summary}</h2>
             <div className="result-grid">
-              <div className="res-item align-between">
+              <div className="res-item">
                 <span>{cur.ord}:</span> 
                 <strong className="res-val">{results.totalOrdinaryHours.toFixed(1)}h</strong>
               </div>
-              <div className="res-item align-between">
+              <div className="res-item">
                 <span>{cur.ot}:</span> 
                 <strong className="res-val">{results.totalOT15xHours.toFixed(1)}h</strong>
               </div>
-              <div className="res-item align-between">
+              <div className="res-item">
                 <span>{cur.hol}:</span> 
                 <strong className="res-val">{results.totalHolidayHours.toFixed(1)}h</strong>
               </div>
@@ -251,12 +250,12 @@ function App() {
             </div>
           </div>
 
-          <div className="details-card shadow-block">
+          <div className="details-card flat-block">
             <h3>{cur.details}</h3>
             <div className="breakdown-list">
               {results.breakdown.length === 0 && <p className="empty-msg">No entries</p>}
               {results.breakdown.map((b, i) => (
-                <div key={i} className="b-item align-left">
+                <div key={i} className="b-item">
                   <span className="b-day">{b.day}</span>
                   <span className="b-val">{b.net}h</span>
                   <span className="b-tag">Ord:{b.ord} | OT:{b.ot} | H:{b.hol}</span>
@@ -278,6 +277,11 @@ function App() {
           </a>
         </aside>
       </div>
+      
+      <footer className="version-footer">
+        <p>{cur.footer}</p>
+        <span>v1.3.1</span>
+      </footer>
     </div>
   );
 }
