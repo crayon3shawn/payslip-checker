@@ -44,20 +44,18 @@ function App() {
                     <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                     <td className="center cell-start">
                       <input 
-                        type="text" 
+                        type="time" 
                         value={r.startTime} 
                         className="time-input"
-                        placeholder="00:00"
                         disabled={!r.enabled}
                         onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} 
                       />
                     </td>
                     <td className="center cell-end">
                       <input 
-                        type="text" 
+                        type="time" 
                         value={r.endTime} 
                         className="time-input"
-                        placeholder="00:00"
                         disabled={!r.enabled}
                         onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} 
                       />
