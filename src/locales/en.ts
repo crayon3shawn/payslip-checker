@@ -39,6 +39,7 @@ export const en: Translation = {
   copyBtn: 'Copy Pay Summary',
   copyDone: 'Copied to Clipboard',
   resetBtn: 'Reset All Data',
+  resetBtnShort: 'Reset',
   resetConfirmTitle: 'Reset all data?',
   resetConfirmDesc: 'All input data will be restored to default values.',
   cancel: 'Cancel',

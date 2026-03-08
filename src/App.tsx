@@ -1,18 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { usePayslip } from './hooks/usePayslip';
 import { tw } from './locales/tw';
 import { en } from './locales/en';
 import { formatPaySummary } from './utils/formatters';
+import { ResetModal } from './components/ResetModal';
+import { DesktopView } from './components/DesktopView';
+import { MobileView } from './components/MobileView';
 
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [showRules, setShowRules] = useState(true); 
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
-  const { hourlyRate, setHourlyRate, minEngagement, setMinEngagement, empType, setEmpType, records, updateRecord, results, dailyLimit, resetAllData } = usePayslip();
+  const [isPulsing, setIsPulsing] = useState(false);
+  
+  const { 
+    hourlyRate, setHourlyRate, 
+    minEngagement, setMinEngagement, 
+    empType, setEmpType, 
+    records, updateRecord, 
+    results, dailyLimit, resetAllData 
+  } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
+
+  useEffect(() => {
+    if (results.grossPay > 0) {
+      setIsPulsing(true);
+      const timer = setTimeout(() => setIsPulsing(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [results.grossPay]);
+
+  const handleCopy = () => {
+    const text = formatPaySummary(t, lang, records, results);
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const renderRule = (text: string) => {
+    const parts = text.split(/[:：]/);
+    if (parts.length > 1) {
+      return (
+        <p className="note highlight">
+          • <strong>{parts[0]}</strong>: {parts.slice(1).join(':')}
+        </p>
+      );
+    }
+    return <p className="note highlight">• {text}</p>;
+  };
 
   const renderRuleContent = () => (
     <div className="note-group">
@@ -30,29 +68,96 @@ function App() {
     </div>
   );
 
-  const renderRule = (text: string) => {
-    const parts = text.split(/[:：]/);
-    if (parts.length > 1) {
-      return (
-        <p className="note highlight">
-          • <strong>{parts[0]}</strong>: {parts.slice(1).join(':')}
-        </p>
-      );
-    }
-    return <p className="note highlight">• {text}</p>;
-  };
+  const SidebarContent = (
+    <>
+      <div className="sidebar-card">
+        <h3 className="section-title">{t.rate}</h3>
+        <div className="rate-setting-group">
+          <div className="setting-row">
+            <label className="setting-label">{t.hourlyRateLabel}</label>
+            <div className="input-with-symbol">
+              <span>$</span>
+              <input type="number" step="0.01" value={hourlyRate || ''} onFocus={(e) => e.target.select()} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
+            </div>
+          </div>
+          <div className="setting-row">
+            <label className="setting-label">{t.minEngLabel}</label>
+            <div className="input-with-symbol mini">
+              <input type="number" step="0.5" value={minEngagement || ''} onFocus={(e) => e.target.select()} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
+            </div>
+          </div>
+          <div className="emp-toggle">
+            <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>{t.permanent}</button>
+            <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>{t.casual}</button>
+          </div>
+          {empType === 'casual' && (
+            <div className="base-rate-hint">
+              {t.baseRateHint}: <strong>${results.baseRate}</strong>
+            </div>
+          )}
+        </div>
+      </div>
 
-  const handleCopy = () => {
-    const text = formatPaySummary(t, lang, records, results);
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+      <div className="summary-card flat-block">
+        <h3 className="section-title">{t.summary}</h3>
+        <div className="result-grid">
+          <div className="res-item">
+            <span className="res-label">{t.ord}</span>
+            <div className="res-combined">
+              <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
+              <span className="res-amount">(${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+            </div>
+          </div>
+          <div className="res-item">
+            <span className="res-label">{t.ot15}</span>
+            <div className="res-combined">
+              <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
+              <span className="res-amount">(${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+            </div>
+          </div>
+          <div className="res-item">
+            <span className="res-label">{t.ot20}</span>
+            <div className="res-combined">
+              <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
+              <span className="res-amount">(${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+            </div>
+          </div>
+          <div className="res-item">
+            <span className="res-label">{t.hol}</span>
+            <div className="res-combined">
+              <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
+              <span className="res-amount">(${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+            </div>
+          </div>
+          <div className="separator-line"></div>
+          <div className="res-item accent-row">
+            <span className="res-label">{t.gross}</span>
+            <strong className={`res-val-uniform ${isPulsing ? 'gross-pulse' : ''}`}>
+              ${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}
+            </strong>
+          </div>
+          <div className="res-item">
+            <span className="res-label">{t.super} (OTE)</span>
+            <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+          </div>
+        </div>
+        <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
+          {copied ? t.copyDone : t.copyBtn}
+        </button>
+      </div>
 
-  const confirmReset = () => {
-    resetAllData();
-    setShowResetModal(false);
-  };
+      <div className="resource-links desktop-only-block">
+        <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
+           <span className="link-title">{t.fwo_site}</span>
+           <span className="link-arrow">→</span>
+        </a>
+        <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
+           <span className="link-title">{t.fwo_calc}</span>
+           <span className="link-arrow">→</span>
+        </a>
+      </div>
+    </>
+  );
 
   return (
     <div className="container">
@@ -60,7 +165,8 @@ function App() {
         <h1>{t.title}</h1>
         <div className="header-right">
           <button className="reset-header-btn" onClick={() => setShowResetModal(true)}>
-            {t.resetBtn}
+            <span className="desktop-text">{t.resetBtn}</span>
+            <span className="mobile-text">{t.resetBtnShort}</span>
           </button>
           <button className="lang-toggle-circle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
             {lang === 'en' ? '中' : 'EN'}
@@ -68,189 +174,20 @@ function App() {
         </div>
       </header>
 
-      <div className="main-layout">
-        <section className="input-section">
-          <div className="table-wrapper">
-            <table className="record-table">
-              <thead>
-                <tr>
-                  <th className="center" style={{ width: "50px" }}>{t.on}</th>
-                  <th className="center" style={{ width: "60px" }}>{t.day}</th>
-                  <th className="center">{t.start}</th>
-                  <th className="center">{t.end}</th>
-                  <th className="center" style={{ width: "80px" }}>{t.break}</th>
-                  <th className="center" style={{ width: "80px" }}>{t.holiday}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {records.map(r => (
-                  <tr key={r.id} className={`${r.enabled ? '' : 'disabled-row'} ${r.isHoliday ? 'holiday-row' : ''}`}>
-                    <td className="center cell-on">
-                      <label className="mobile-checkbox-label">
-                        <input type="checkbox" checked={r.enabled} onChange={() => updateRecord(r.id, 'enabled', !r.enabled)} />
-                        <span className="mobile-only-text">{t.on}</span>
-                      </label>
-                    </td>
-                    <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
-                    <td className="center cell-start">
-                      <input type="time" step="60" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
-                    </td>
-                    <td className="center cell-end">
-                      <input type="time" step="60" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
-                    </td>
-                    <td className="center cell-break">
-                      <div className="break-input-wrapper">
-                        <input 
-                          type="number" 
-                          className="time-input mini-input" 
-                          disabled={!r.enabled} 
-                          value={r.breakMinutes || ''} 
-                          onFocus={(e) => e.target.select()}
-                          onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
-                        />
-                        <span className="mobile-only-text">{t.break}</span>
-                      </div>
-                    </td>
-                    <td className="center cell-holiday">
-                      <label className="checkbox-label">
-                        <input type="checkbox" disabled={!r.enabled} checked={r.isHoliday} onChange={() => updateRecord(r.id, 'isHoliday', !r.isHoliday)} />
-                        <span className="mobile-only-text">{t.holiday}</span>
-                      </label>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      <DesktopView 
+        t={t} lang={lang} records={records} updateRecord={updateRecord} 
+        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+        Sidebar={SidebarContent}
+      />
 
-          {/* Desktop Only Rules */}
-          <div className="logic-card flat-block desktop-only-block">
-            <div className="logic-header" onClick={() => setShowRules(!showRules)}>
-              <h3 className="section-title">{t.howItWorks}</h3>
-              <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
-            </div>
-            {showRules && renderRuleContent()}
-          </div>
-        </section>
-
-        <aside className="sidebar">
-          <div className="sidebar-card">
-            <h3 className="section-title">{t.rate}</h3>
-            <div className="rate-setting-group">
-              <div className="setting-row">
-                <label className="setting-label">{t.hourlyRateLabel}</label>
-                <div className="input-with-symbol">
-                  <span>$</span>
-                  <input type="number" step="0.01" value={hourlyRate || ''} onFocus={(e) => e.target.select()} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
-                </div>
-              </div>
-              
-              <div className="setting-row">
-                <label className="setting-label">{t.minEngLabel}</label>
-                <div className="input-with-symbol mini">
-                  <input type="number" step="0.5" value={minEngagement || ''} onFocus={(e) => e.target.select()} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
-                </div>
-              </div>
-
-              <div className="emp-toggle">
-                <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>{t.permanent}</button>
-                <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>{t.casual}</button>
-              </div>
-              {empType === 'casual' && (
-                <div className="base-rate-hint">
-                  {t.baseRateHint}: <strong>${results.baseRate}</strong>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="summary-card flat-block">
-            <h3 className="section-title">{t.summary}</h3>
-            <div className="result-grid">
-              <div className="res-item">
-                <span className="res-label">{t.ord}</span>
-                <div className="res-combined">
-                  <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
-                  <span className="res-amount">(${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-                </div>
-              </div>
-              <div className="res-item">
-                <span className="res-label">{t.ot15}</span>
-                <div className="res-combined">
-                  <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
-                  <span className="res-amount">(${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-                </div>
-              </div>
-              <div className="res-item">
-                <span className="res-label">{t.ot20}</span>
-                <div className="res-combined">
-                  <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
-                  <span className="res-amount">(${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-                </div>
-              </div>
-              <div className="res-item">
-                <span className="res-label">{t.hol}</span>
-                <div className="res-combined">
-                  <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
-                  <span className="res-amount">(${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-                </div>
-              </div>
-              
-              <div className="separator-line"></div>
-              
-              <div className="res-item accent-row">
-                <span className="res-label">{t.gross}</span>
-                <strong className="res-val-uniform">${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
-              </div>
-              
-              <div className="res-item">
-                <span className="res-label">{t.super} (OTE)</span>
-                <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
-              </div>
-            </div>
-            
-            <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
-              {copied ? t.copyDone : t.copyBtn}
-            </button>
-          </div>
-
-          {/* Mobile Only Rules */}
-          <div className="logic-card flat-block mobile-only-block">
-            <div className="logic-header" onClick={() => setShowRules(!showRules)}>
-              <h3 className="section-title">{t.howItWorks}</h3>
-              <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
-            </div>
-            {showRules && renderRuleContent()}
-          </div>
-
-          <div className="resource-links">
-            <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
-               <span className="link-title">{t.fwo_site}</span>
-               <span className="link-arrow">→</span>
-            </a>
-            <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
-               <span className="link-title">{t.fwo_calc}</span>
-               <span className="link-arrow">→</span>
-            </a>
-          </div>
-        </aside>
-      </div>
+      <MobileView 
+        t={t} lang={lang} records={records} updateRecord={updateRecord} 
+        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+        Sidebar={SidebarContent}
+      />
 
       {showResetModal && (
-        <div className="modal-overlay">
-          <div className="modal-content card-glow">
-            <h3>{t.resetConfirmTitle}</h3>
-            <p>{t.resetConfirmDesc}</p>
-            <div className="modal-actions">
-              <button className="modal-btn cancel" onClick={() => setShowResetModal(false)}>
-                {t.cancel}
-              </button>
-              <button className="modal-btn confirm" onClick={confirmReset}>
-                {t.confirm}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ResetModal t={t} onConfirm={() => { resetAllData(); setShowResetModal(false); }} onCancel={() => setShowResetModal(false)} />
       )}
       
       <footer className="version-footer">
@@ -263,7 +200,7 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.6.8</span>
+            <span className="v-tag-small">v1.7.1</span>
           </div>
           <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">

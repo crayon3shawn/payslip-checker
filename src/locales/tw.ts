@@ -37,6 +37,7 @@ export const tw = {
   copyBtn: '複製薪資摘要',
   copyDone: '已複製',
   resetBtn: '重設所有資料',
+  resetBtnShort: '重設',
   resetConfirmTitle: '確定要重設嗎？',
   resetConfirmDesc: '所有輸入資料將會恢復至預設值。',
   cancel: '取消',
