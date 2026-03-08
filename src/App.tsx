@@ -7,9 +7,42 @@ import { en } from './locales/en';
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [showRules, setShowRules] = useState(true); // Default show rules on desktop
+  const [copied, setCopied] = useState(false);
   const { hourlyRate, setHourlyRate, minEngagement, setMinEngagement, empType, setEmpType, records, updateRecord, results, dailyLimit } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
+
+  const renderRule = (text: string) => {
+    const parts = text.split(/[:：]/); // Support both EN and TW colons
+    if (parts.length > 1) {
+      return (
+        <p className="note highlight">
+          • <strong>{parts[0]}</strong>: {parts.slice(1).join(':')}
+        </p>
+      );
+    }
+    return <p className="note highlight">• {text}</p>;
+  };
+
+  const handleCopy = () => {
+    let text = `${t.title} Summary\n--------------------------\n`;
+    records.filter(r => r.enabled).forEach(r => {
+      const day = lang === 'en' ? r.day : r.dayCn;
+      text += `${day}: ${r.startTime}-${r.endTime} (${r.breakMinutes}m break)${r.isHoliday ? ' [PH]' : ''}\n`;
+    });
+    text += `--------------------------\n`;
+    text += `${t.ord}: ${results.totalOrdinary.toFixed(2)}h ($${results.payOrdinary.toFixed(2)})\n`;
+    if (results.totalOT15 > 0) text += `${t.ot15}: ${results.totalOT15.toFixed(2)}h ($${results.payOT15.toFixed(2)})\n`;
+    if (results.totalOT20 > 0) text += `${t.ot20}: ${results.totalOT20.toFixed(2)}h ($${results.payOT20.toFixed(2)})\n`;
+    if (results.totalHoliday > 0) text += `${t.hol}: ${results.totalHoliday.toFixed(2)}h ($${results.payHoliday.toFixed(2)})\n`;
+    text += `--------------------------\n`;
+    text += `${t.gross}: $${results.grossPay.toFixed(2)}\n`;
+    text += `${t.super} (12% OTE): $${results.superGuarantee.toFixed(2)}\n`;
+    
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="container">
@@ -80,13 +113,16 @@ function App() {
             </div>
             {showRules && (
               <div className="note-group">
-                <p className="note highlight">• <strong>{dailyLimit}h</strong> {t.rule_limit}</p>
-                <p className="note highlight">• {t.rule_minimum}</p>
-                <p className="note highlight">• {t.rule_break}</p>
-                <p className="note highlight">• {t.rule_weekday}</p>
-                <p className="note highlight">• {t.rule_sat}</p>
-                <p className="note highlight">• {t.rule_sun}</p>
+                <p className="note highlight">• <strong>Daily Cap: {dailyLimit}h</strong> – {t.rule_limit}</p>
+                {renderRule(t.rule_minimum)}
+                {renderRule(t.rule_break)}
+                {renderRule(t.rule_weekday)}
+                {renderRule(t.rule_sat)}
+                {renderRule(t.rule_sun)}
+                {renderRule(t.rule_super)}
                 {empType === 'casual' && <p className="note highlight">• {t.rule_casual}</p>}
+                <div className="separator-mini"></div>
+                {renderRule(t.rule_fwo)}
                 <div className="disclaimer-mini">{t.disclaimer}</div>
               </div>
             )}
@@ -164,10 +200,14 @@ function App() {
               </div>
               
               <div className="res-item">
-                <span className="res-label">{t.super}</span>
+                <span className="res-label">{t.super} (12% OTE)</span>
                 <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
+            
+            <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
+              {copied ? t.copyDone : t.copyBtn}
+            </button>
           </div>
 
           <div className="resource-links">
@@ -193,7 +233,7 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.6.2</span>
+            <span className="v-tag-small">v1.6.4</span>
           </div>
           <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">

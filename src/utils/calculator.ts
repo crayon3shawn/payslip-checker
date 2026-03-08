@@ -79,7 +79,9 @@ export const getResults = (records: DailyRecord[], hourlyRate: number, empType: 
 
   // Rounding for precision
   const grossPay = Math.round((summary.payOrdinary + summary.payOT15 + summary.payOT20 + summary.payHoliday) * 100) / 100;
-  const superGuarantee = Math.round(grossPay * AU_REGS.SUPER_GUARANTEE_RATE * 100) / 100;
+  
+  // Super Guarantee (12%) is calculated based on Ordinary Time Earnings (OTE) only.
+  const superGuarantee = Math.round(summary.payOrdinary * AU_REGS.SUPER_GUARANTEE_RATE * 100) / 100;
 
   return {
     ...summary,
