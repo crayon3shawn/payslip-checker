@@ -4,7 +4,7 @@
 export const AU_REGS = {
   WEEKLY_STANDARD_HOURS: 38,    // National standard for full-time
   MIN_ENGAGEMENT_HOURS: 3.0,    // Award minimum call-out
-  UNPAID_BREAK_DURATION: 0.5,   // Standard meal break
+  UNPAID_BREAK_DURATION: 50,    // Default 50m Smoko
   
   // Overtime Tiers (Applied to BASE rate)
   WEEKDAY_OT_LEVEL_1_LIMIT: 3.0, // First 3 hours on weekdays
@@ -25,5 +25,7 @@ export const AU_REGS = {
   
   CASUAL_LOADING: 0.25,
   SUPER_GUARANTEE_RATE: 0.12,
-  DEFAULT_HOURLY_RATE: 31.19
+  DEFAULT_HOURLY_RATE: 32.15,
+  DEFAULT_START: '06:00',
+  DEFAULT_END: '16:00'
 };

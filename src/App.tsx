@@ -3,17 +3,35 @@ import './App.css';
 import { usePayslip } from './hooks/usePayslip';
 import { tw } from './locales/tw';
 import { en } from './locales/en';
+import { formatPaySummary } from './utils/formatters';
 
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
-  const [showRules, setShowRules] = useState(true); // Default show rules on desktop
+  const [showRules, setShowRules] = useState(true); 
   const [copied, setCopied] = useState(false);
-  const { hourlyRate, setHourlyRate, minEngagement, setMinEngagement, empType, setEmpType, records, updateRecord, results, dailyLimit } = usePayslip();
+  const [showResetModal, setShowResetModal] = useState(false);
+  const { hourlyRate, setHourlyRate, minEngagement, setMinEngagement, empType, setEmpType, records, updateRecord, results, dailyLimit, resetAllData } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
 
+  const renderRuleContent = () => (
+    <div className="note-group">
+      <p className="note highlight">• <strong>Daily Cap: {dailyLimit}h</strong> – {t.rule_limit}</p>
+      {renderRule(t.rule_minimum)}
+      {renderRule(t.rule_break)}
+      {renderRule(t.rule_weekday)}
+      {renderRule(t.rule_sat)}
+      {renderRule(t.rule_sun)}
+      {renderRule(t.rule_super)}
+      {empType === 'casual' && <p className="note highlight">• {t.rule_casual}</p>}
+      <div className="separator-mini"></div>
+      {renderRule(t.rule_fwo)}
+      <div className="disclaimer-mini">{t.disclaimer}</div>
+    </div>
+  );
+
   const renderRule = (text: string) => {
-    const parts = text.split(/[:：]/); // Support both EN and TW colons
+    const parts = text.split(/[:：]/);
     if (parts.length > 1) {
       return (
         <p className="note highlight">
@@ -25,23 +43,15 @@ function App() {
   };
 
   const handleCopy = () => {
-    let text = `${t.title} Summary\n--------------------------\n`;
-    records.filter(r => r.enabled).forEach(r => {
-      const day = lang === 'en' ? r.day : r.dayCn;
-      text += `${day}: ${r.startTime}-${r.endTime} (${r.breakMinutes}m break)${r.isHoliday ? ' [PH]' : ''}\n`;
-    });
-    text += `--------------------------\n`;
-    text += `${t.ord}: ${results.totalOrdinary.toFixed(2)}h ($${results.payOrdinary.toFixed(2)})\n`;
-    if (results.totalOT15 > 0) text += `${t.ot15}: ${results.totalOT15.toFixed(2)}h ($${results.payOT15.toFixed(2)})\n`;
-    if (results.totalOT20 > 0) text += `${t.ot20}: ${results.totalOT20.toFixed(2)}h ($${results.payOT20.toFixed(2)})\n`;
-    if (results.totalHoliday > 0) text += `${t.hol}: ${results.totalHoliday.toFixed(2)}h ($${results.payHoliday.toFixed(2)})\n`;
-    text += `--------------------------\n`;
-    text += `${t.gross}: $${results.grossPay.toFixed(2)}\n`;
-    text += `${t.super} (12% OTE): $${results.superGuarantee.toFixed(2)}\n`;
-    
+    const text = formatPaySummary(t, lang, records, results);
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const confirmReset = () => {
+    resetAllData();
+    setShowResetModal(false);
   };
 
   return (
@@ -49,6 +59,9 @@ function App() {
       <header>
         <h1>{t.title}</h1>
         <div className="header-right">
+          <button className="reset-header-btn" onClick={() => setShowResetModal(true)}>
+            {t.resetBtn}
+          </button>
           <button className="lang-toggle-circle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
             {lang === 'en' ? '中' : 'EN'}
           </button>
@@ -73,7 +86,10 @@ function App() {
                 {records.map(r => (
                   <tr key={r.id} className={`${r.enabled ? '' : 'disabled-row'} ${r.isHoliday ? 'holiday-row' : ''}`}>
                     <td className="center cell-on">
-                      <input type="checkbox" checked={r.enabled} onChange={() => updateRecord(r.id, 'enabled', !r.enabled)} />
+                      <label className="mobile-checkbox-label">
+                        <input type="checkbox" checked={r.enabled} onChange={() => updateRecord(r.id, 'enabled', !r.enabled)} />
+                        <span className="mobile-only-text">{t.on}</span>
+                      </label>
                     </td>
                     <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                     <td className="center cell-start">
@@ -89,6 +105,7 @@ function App() {
                           className="time-input mini-input" 
                           disabled={!r.enabled} 
                           value={r.breakMinutes || ''} 
+                          onFocus={(e) => e.target.select()}
                           onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
                         />
                         <span className="mobile-only-text">{t.break}</span>
@@ -106,26 +123,13 @@ function App() {
             </table>
           </div>
 
-          <div className="logic-card flat-block">
+          {/* Desktop Only Rules */}
+          <div className="logic-card flat-block desktop-only-block">
             <div className="logic-header" onClick={() => setShowRules(!showRules)}>
               <h3 className="section-title">{t.howItWorks}</h3>
               <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
             </div>
-            {showRules && (
-              <div className="note-group">
-                <p className="note highlight">• <strong>Daily Cap: {dailyLimit}h</strong> – {t.rule_limit}</p>
-                {renderRule(t.rule_minimum)}
-                {renderRule(t.rule_break)}
-                {renderRule(t.rule_weekday)}
-                {renderRule(t.rule_sat)}
-                {renderRule(t.rule_sun)}
-                {renderRule(t.rule_super)}
-                {empType === 'casual' && <p className="note highlight">• {t.rule_casual}</p>}
-                <div className="separator-mini"></div>
-                {renderRule(t.rule_fwo)}
-                <div className="disclaimer-mini">{t.disclaimer}</div>
-              </div>
-            )}
+            {showRules && renderRuleContent()}
           </div>
         </section>
 
@@ -137,14 +141,14 @@ function App() {
                 <label className="setting-label">{t.hourlyRateLabel}</label>
                 <div className="input-with-symbol">
                   <span>$</span>
-                  <input type="number" step="0.01" value={hourlyRate || ''} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
+                  <input type="number" step="0.01" value={hourlyRate || ''} onFocus={(e) => e.target.select()} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
                 </div>
               </div>
               
               <div className="setting-row">
                 <label className="setting-label">{t.minEngLabel}</label>
                 <div className="input-with-symbol mini">
-                  <input type="number" step="0.5" value={minEngagement || ''} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
+                  <input type="number" step="0.5" value={minEngagement || ''} onFocus={(e) => e.target.select()} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
                 </div>
               </div>
 
@@ -200,7 +204,7 @@ function App() {
               </div>
               
               <div className="res-item">
-                <span className="res-label">{t.super} (12% OTE)</span>
+                <span className="res-label">{t.super} (OTE)</span>
                 <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
               </div>
             </div>
@@ -208,6 +212,15 @@ function App() {
             <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
               {copied ? t.copyDone : t.copyBtn}
             </button>
+          </div>
+
+          {/* Mobile Only Rules */}
+          <div className="logic-card flat-block mobile-only-block">
+            <div className="logic-header" onClick={() => setShowRules(!showRules)}>
+              <h3 className="section-title">{t.howItWorks}</h3>
+              <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
+            </div>
+            {showRules && renderRuleContent()}
           </div>
 
           <div className="resource-links">
@@ -222,6 +235,23 @@ function App() {
           </div>
         </aside>
       </div>
+
+      {showResetModal && (
+        <div className="modal-overlay">
+          <div className="modal-content card-glow">
+            <h3>{t.resetConfirmTitle}</h3>
+            <p>{t.resetConfirmDesc}</p>
+            <div className="modal-actions">
+              <button className="modal-btn cancel" onClick={() => setShowResetModal(false)}>
+                {t.cancel}
+              </button>
+              <button className="modal-btn confirm" onClick={confirmReset}>
+                {t.confirm}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       <footer className="version-footer">
         <div className="footer-centered-content">
@@ -233,7 +263,7 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.6.4</span>
+            <span className="v-tag-small">v1.6.8</span>
           </div>
           <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">

@@ -36,6 +36,11 @@ export const tw = {
   rule_casual: 'Casual 加班費是以「底薪」計算 (已扣除 25% Loading)。',
   copyBtn: '複製薪資摘要',
   copyDone: '已複製',
+  resetBtn: '重設所有資料',
+  resetConfirmTitle: '確定要重設嗎？',
+  resetConfirmDesc: '所有輸入資料將會恢復至預設值。',
+  cancel: '取消',
+  confirm: '確定重設',
   disclaimer: '僅供參考。詳細規則請參照公司 EA 或 Fair Work 官方說明。',
   privacy: '數據不離身。僅在本地瀏覽器計算。'
 };

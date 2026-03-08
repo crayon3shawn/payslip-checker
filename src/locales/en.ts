@@ -38,6 +38,11 @@ export const en: Translation = {
   rule_casual: 'Casual Overtime: Calculated using the Base Rate (excluding 25% loading).',
   copyBtn: 'Copy Pay Summary',
   copyDone: 'Copied to Clipboard',
+  resetBtn: 'Reset All Data',
+  resetConfirmTitle: 'Reset all data?',
+  resetConfirmDesc: 'All input data will be restored to default values.',
+  cancel: 'Cancel',
+  confirm: 'Confirm Reset',
   disclaimer: 'For estimation only. Refer to your EA or FWO for exact rules.',
   privacy: 'No data leaves your device. All calculations are performed locally.'
 };

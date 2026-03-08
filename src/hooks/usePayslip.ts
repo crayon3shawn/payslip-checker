@@ -33,20 +33,21 @@ export function usePayslip() {
     return (saved as EmploymentType) || 'casual';
   });
 
+  const getDefaultRecords = (): UIRecord[] => INITIAL_DAYS.map((d) => ({
+    id: d.id,
+    day: d.en,
+    dayCn: d.cn,
+    enabled: d.id <= 5,
+    startTime: AU_REGS.DEFAULT_START,
+    endTime: AU_REGS.DEFAULT_END,
+    breakMinutes: AU_REGS.UNPAID_BREAK_DURATION,
+    isHoliday: false,
+  }));
+
   const [records, setRecords] = useState<UIRecord[]>(() => {
     const saved = localStorage.getItem('payslipRecords');
     if (saved) return JSON.parse(saved);
-    
-    return INITIAL_DAYS.map((d) => ({
-      id: d.id,
-      day: d.en,
-      dayCn: d.cn,
-      enabled: d.id <= 5,
-      startTime: '09:00',
-      endTime: '17:00',
-      breakMinutes: 30,
-      isHoliday: false,
-    }));
+    return getDefaultRecords();
   });
 
   useEffect(() => {
@@ -59,8 +60,15 @@ export function usePayslip() {
     localStorage.setItem('payslipRecords', JSON.stringify(records));
   }, [records]);
 
-  const updateRecord = (id: number, field: keyof UIRecord, value: any) => {
+  const updateRecord = <K extends keyof UIRecord>(id: number, field: K, value: UIRecord[K]) => {
     setRecords(prev => prev.map(r => r.id === id ? { ...r, [field]: value } : r));
+  };
+
+  const resetAllData = () => {
+    setHourlyRate(AU_REGS.DEFAULT_HOURLY_RATE);
+    setMinEngagement(AU_REGS.MIN_ENGAGEMENT_HOURS);
+    setEmpType('casual');
+    setRecords(getDefaultRecords());
   };
 
   // Calculate dynamic daily limit based on enabled days (excluding weekends for the 38h division)
@@ -85,6 +93,7 @@ export function usePayslip() {
     records,
     updateRecord,
     results,
-    dailyLimit
+    dailyLimit,
+    resetAllData
   };
 }
