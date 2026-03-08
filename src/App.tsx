@@ -82,6 +82,7 @@ function App() {
               <div className="note-group">
                 <p className="note highlight">• <strong>{dailyLimit}h</strong> {t.rule_limit}</p>
                 <p className="note highlight">• {t.rule_minimum}</p>
+                <p className="note highlight">• {t.rule_break}</p>
                 <p className="note highlight">• {t.rule_weekday}</p>
                 <p className="note highlight">• {t.rule_sat}</p>
                 <p className="note highlight">• {t.rule_sun}</p>
