@@ -6,7 +6,8 @@ import { en } from './locales/en';
 
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
-  const { hourlyRate, setHourlyRate, records, updateRecord, results } = usePayslip();
+  const [showRules, setShowRules] = useState(true); // Default show rules on desktop
+  const { hourlyRate, setHourlyRate, empType, setEmpType, records, updateRecord, results, dailyLimit } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
 
@@ -43,22 +44,10 @@ function App() {
                     </td>
                     <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                     <td className="center cell-start">
-                      <input 
-                        type="time" 
-                        value={r.startTime} 
-                        className="time-input"
-                        disabled={!r.enabled}
-                        onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} 
-                      />
+                      <input type="time" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
                     </td>
                     <td className="center cell-end">
-                      <input 
-                        type="time" 
-                        value={r.endTime} 
-                        className="time-input"
-                        disabled={!r.enabled}
-                        onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} 
-                      />
+                      <input type="time" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
                     </td>
                     <td className="center cell-break">
                       <label className="checkbox-label">
@@ -77,16 +66,42 @@ function App() {
               </tbody>
             </table>
           </div>
+
+          <div className="logic-card flat-block">
+            <div className="logic-header" onClick={() => setShowRules(!showRules)}>
+              <h3>{t.howItWorks}</h3>
+              <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
+            </div>
+            {showRules && (
+              <div className="note-group">
+                <p className="note highlight">• <strong>{dailyLimit}h</strong> {t.rule_limit}</p>
+                <p className="note highlight">• {t.rule_weekday}</p>
+                <p className="note highlight">• {t.rule_sat}</p>
+                <p className="note highlight">• {t.rule_sun}</p>
+                {empType === 'casual' && <p className="note highlight">• {t.rule_casual}</p>}
+                <div className="disclaimer-mini">{t.disclaimer}</div>
+              </div>
+            )}
+          </div>
         </section>
 
         <aside className="sidebar">
           <div className="sidebar-card">
             <h3>{t.rate}</h3>
-            <div className="input-group full-width no-label">
+            <div className="rate-setting-group">
               <div className="input-with-symbol">
                 <span>$</span>
                 <input type="number" value={hourlyRate} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
               </div>
+              <div className="emp-toggle">
+                <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>{t.permanent}</button>
+                <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>{t.casual}</button>
+              </div>
+              {empType === 'casual' && (
+                <div className="base-rate-hint">
+                  {t.baseRateHint}: <strong>${results.baseRate}</strong>
+                </div>
+              )}
             </div>
           </div>
 
@@ -95,15 +110,19 @@ function App() {
             <div className="result-grid">
               <div className="res-item">
                 <span className="res-label">{t.ord}</span>
-                <strong className="res-val">{results.totalOrdinaryHours.toFixed(1)}h</strong>
+                <strong className="res-val">{results.totalOrdinary.toFixed(1)}h</strong>
               </div>
               <div className="res-item">
-                <span className="res-label">{t.ot}</span>
-                <strong className="res-val">{results.totalOT15xHours.toFixed(1)}h</strong>
+                <span className="res-label">{t.ot15}</span>
+                <strong className="res-val">{results.totalOT15.toFixed(1)}h</strong>
+              </div>
+              <div className="res-item">
+                <span className="res-label">{t.ot20}</span>
+                <strong className="res-val">{results.totalOT20.toFixed(1)}h</strong>
               </div>
               <div className="res-item">
                 <span className="res-label">{t.hol}</span>
-                <strong className="res-val">{results.totalHolidayHours.toFixed(1)}h</strong>
+                <strong className="res-val">{results.totalHoliday.toFixed(1)}h</strong>
               </div>
               
               <div className="separator-line"></div>
@@ -120,32 +139,16 @@ function App() {
             </div>
           </div>
 
-          <div className="details-card flat-block">
-            <h3>{t.details}</h3>
-            <div className="breakdown-list">
-              {results.breakdown.length === 0 && <p className="empty-msg">No entries</p>}
-              {results.breakdown.map((b, i) => (
-                <div key={i} className="b-item">
-                  <span className="b-day">{(records[i] as any).day || 'Day'}</span>
-                  <span className="b-val">{b.net}h</span>
-                  <span className="b-tag">{lang === 'en' ? 'ORD' : t.ord}:{b.ord} | {lang === 'en' ? 'OT' : t.ot}:{b.ot} | {lang === 'en' ? 'H' : '假'}:{b.hol}</span>
-                </div>
-              ))}
-            </div>
+          <div className="resource-links">
+            <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
+               <span className="link-title">{t.fwo_site}</span>
+               <span className="link-arrow">→</span>
+            </a>
+            <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
+               <span className="link-title">{t.fwo_calc}</span>
+               <span className="link-arrow">→</span>
+            </a>
           </div>
-
-          <div className="logic-card flat-block">
-            <h3>{t.howItWorks}</h3>
-            <div className="note-group">
-              <p className="note highlight">• {t.note1}</p>
-              <p className="note highlight">• {t.note2}</p>
-              <p className="note highlight">• {t.note3}</p>
-            </div>
-          </div>
-          
-          <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-minimal-link">
-             {t.fairwork} →
-          </a>
         </aside>
       </div>
       
@@ -159,9 +162,9 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.5.4</span>
+            <span className="v-tag-small">v1.6.0</span>
           </div>
-          <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
+          <p className="privacy-msg-en">{t.privacy}</p>
           <div className="footer-row license-line">
             <span>Licensed under CC BY 4.0</span>
           </div>

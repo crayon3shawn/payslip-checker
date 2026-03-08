@@ -9,6 +9,8 @@ export interface DailyRecord {
   isHoliday: boolean;
 }
 
+export type EmploymentType = 'permanent' | 'casual';
+
 export const calculateHours = (start: string, end: string) => {
   const [sH, sM] = start.split(':').map(Number);
   const [eH, eM] = end.split(':').map(Number);
@@ -17,59 +19,72 @@ export const calculateHours = (start: string, end: string) => {
   return diff;
 };
 
-export const getResults = (records: DailyRecord[], hourlyRate: number) => {
-  let totalOrdinaryHours = 0;
-  let totalOT15xHours = 0;
-  let totalHolidayHours = 0;
-  let breakdown: any[] = [];
+export const getResults = (records: DailyRecord[], hourlyRate: number, empType: EmploymentType, dailyLimit: number) => {
+  const baseRate = empType === 'casual' 
+    ? hourlyRate / (1 + AU_REGS.CASUAL_LOADING) 
+    : hourlyRate;
 
-  records.filter(r => r.enabled).forEach(r => {
-    let dailyGross = calculateHours(r.startTime, r.endTime);
-    let netHours = Math.max(0, dailyGross - (r.unpaidBreak ? AU_REGS.UNPAID_BREAK_DURATION : 0));
+  let totalPay = 0;
+  let summary = {
+    totalOrdinary: 0,
+    totalOT15: 0,
+    totalOT20: 0,
+    totalHoliday: 0,
+  };
 
-    let ordinary = 0;
-    let ot = 0;
-    let holiday = 0;
+  const breakdown = records.filter(r => r.enabled).map(r => {
+    const dailyGross = calculateHours(r.startTime, r.endTime);
+    const netHours = Math.max(0, dailyGross - (r.unpaidBreak ? AU_REGS.UNPAID_BREAK_DURATION : 0));
+    
+    let ord = 0, ot15 = 0, ot20 = 0, hol = 0;
+    const dayIndex = r.id; // 1=Mon, 6=Sat, 7=Sun
 
     if (r.isHoliday) {
-      holiday = netHours;
+      hol = netHours;
+      totalPay += hol * baseRate * AU_REGS.PH_MULTIPLIER;
+    } else if (dayIndex === 7) {
+      hol = Math.max(netHours, AU_REGS.SUN_MIN_HOURS);
+      totalPay += hol * baseRate * AU_REGS.SUN_MULTIPLIER;
+    } else if (dayIndex === 6) {
+      ot15 = Math.min(netHours, AU_REGS.SAT_OT_LEVEL_1_LIMIT);
+      ot20 = Math.max(0, netHours - AU_REGS.SAT_OT_LEVEL_1_LIMIT);
+      totalPay += (ot15 * baseRate * AU_REGS.SAT_OT_LEVEL_1) + (ot20 * baseRate * AU_REGS.SAT_OT_LEVEL_2);
     } else {
-      if (netHours > AU_REGS.DAILY_ORDINARY_LIMIT) {
-        ordinary = AU_REGS.DAILY_ORDINARY_LIMIT;
-        ot = netHours - AU_REGS.DAILY_ORDINARY_LIMIT;
-      } else {
-        ordinary = netHours;
-      }
+      // Use dynamic dailyLimit (e.g., 7.6 for 5 days, 9.5 for 4 days)
+      ord = Math.min(netHours, dailyLimit);
+      const remaining = Math.max(0, netHours - dailyLimit);
+      
+      // Weekday OT logic: first 3h @ 1.5x
+      ot15 = Math.min(remaining, AU_REGS.WEEKDAY_OT_LEVEL_1_LIMIT);
+      ot20 = Math.max(0, remaining - AU_REGS.WEEKDAY_OT_LEVEL_1_LIMIT);
+      
+      const ordRate = empType === 'casual' ? hourlyRate : baseRate;
+      totalPay += (ord * ordRate) + (ot15 * baseRate * AU_REGS.OT_LEVEL_1) + (ot20 * baseRate * AU_REGS.OT_LEVEL_2);
     }
 
-    totalOrdinaryHours += ordinary;
-    totalOT15xHours += ot;
-    totalHolidayHours += holiday;
+    summary.totalOrdinary = Math.round((summary.totalOrdinary + ord) * 100) / 100;
+    summary.totalOT15 = Math.round((summary.totalOT15 + ot15) * 100) / 100;
+    summary.totalOT20 = Math.round((summary.totalOT20 + ot20) * 100) / 100;
+    summary.totalHoliday = Math.round((summary.totalHoliday + hol) * 100) / 100;
 
-    breakdown.push({
+    return { 
+      id: r.id, 
       net: netHours.toFixed(1),
-      ord: ordinary.toFixed(1),
-      ot: ot.toFixed(1),
-      hol: holiday.toFixed(1)
-    });
+      ord: ord.toFixed(1),
+      ot15: ot15.toFixed(1),
+      ot20: ot20.toFixed(1),
+      hol: hol.toFixed(1)
+    };
   });
 
-  totalOrdinaryHours = Math.round(totalOrdinaryHours * 100) / 100;
-  totalOT15xHours = Math.round(totalOT15xHours * 100) / 100;
-  totalHolidayHours = Math.round(totalHolidayHours * 100) / 100;
+  const grossPay = Math.round(totalPay * 100) / 100;
+  const superGuarantee = Math.round(grossPay * AU_REGS.SUPER_GUARANTEE_RATE * 100) / 100;
 
-  const grossPay = (totalOrdinaryHours * hourlyRate) + 
-                   (totalOT15xHours * hourlyRate * AU_REGS.OT_MULTIPLIER) + 
-                   (totalHolidayHours * hourlyRate * AU_REGS.HOLIDAY_MULTIPLIER);
-
-  const superGuarantee = grossPay * AU_REGS.SUPER_GUARANTEE_RATE;
-
-  return { 
-    totalOrdinaryHours, 
-    totalOT15xHours, 
-    totalHolidayHours, 
-    grossPay, 
+  return {
+    ...summary,
+    grossPay,
     superGuarantee,
-    breakdown 
+    breakdown,
+    baseRate: Math.round(baseRate * 100) / 100
   };
 };
