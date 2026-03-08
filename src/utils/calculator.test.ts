@@ -9,7 +9,7 @@ describe('AU Payslip Calculator Logic (v1.6.2)', () => {
 
   it('applies Award Minimum Hour (3.0h) for short shifts', () => {
     const records: DailyRecord[] = [{
-      id: 1, enabled: true, startTime: '09:00', endTime: '10:00', unpaidBreak: false, isHoliday: false
+      id: 1, enabled: true, startTime: '09:00', endTime: '10:00', breakMinutes: 0, isHoliday: false
     }];
     // 1h worked, but Award Min is 3.0h
     const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
@@ -20,9 +20,9 @@ describe('AU Payslip Calculator Logic (v1.6.2)', () => {
 
   it('calculates individual pay categories correctly for Overtime', () => {
     const records: DailyRecord[] = [{
-      id: 1, enabled: true, startTime: '08:00', endTime: '18:00', unpaidBreak: true, isHoliday: false
+      id: 1, enabled: true, startTime: '08:00', endTime: '18:00', breakMinutes: 30, isHoliday: false
     }];
-    // 10h total - 0.5h break = 9.5h net
+    // 10h total - 30m break = 9.5h net
     // Ordinary: 7.6h ($31.19/h = $237.04)
     // OT 1.5x: 1.9h ($24.952 * 1.5 = $37.43/h = $71.12)
     const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
@@ -38,7 +38,7 @@ describe('AU Payslip Calculator Logic (v1.6.2)', () => {
   it('handles custom Award Minimum (e.g. 2.0h) correctly', () => {
     const customMin = 2.0;
     const records: DailyRecord[] = [{
-      id: 1, enabled: true, startTime: '09:00', endTime: '10:00', unpaidBreak: false, isHoliday: false
+      id: 1, enabled: true, startTime: '09:00', endTime: '10:00', breakMinutes: 0, isHoliday: false
     }];
     const res = getResults(records, casualRate, 'casual', defaultDailyLimit, customMin);
     
@@ -47,7 +47,7 @@ describe('AU Payslip Calculator Logic (v1.6.2)', () => {
 
   it('applies Sunday minimum 4h guarantee (Industry standard)', () => {
     const records: DailyRecord[] = [{
-      id: 7, enabled: true, startTime: '09:00', endTime: '11:00', unpaidBreak: false, isHoliday: false
+      id: 7, enabled: true, startTime: '09:00', endTime: '11:00', breakMinutes: 0, isHoliday: false
     }];
     // 2h worked, but Sunday guarantee is 4.0h
     const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
@@ -58,7 +58,7 @@ describe('AU Payslip Calculator Logic (v1.6.2)', () => {
 
   it('calculates Saturday tiers correctly (3h 1.5x, then 2.0x)', () => {
     const records: DailyRecord[] = [{
-      id: 6, enabled: true, startTime: '09:00', endTime: '14:00', unpaidBreak: false, isHoliday: false
+      id: 6, enabled: true, startTime: '09:00', endTime: '14:00', breakMinutes: 0, isHoliday: false
     }];
     // 5h total
     // OT 1.5x: 3.0h
