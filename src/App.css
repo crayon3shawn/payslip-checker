@@ -8,6 +8,7 @@
   --holiday: #2a1b1b;
   --disabled: #16191d;
   --input-bg: #24292f;
+  --glow-color: rgba(0, 210, 255, 0.15);
 }
 
 html, body {
@@ -38,7 +39,13 @@ header {
   margin-bottom: 2rem;
 }
 
-h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
+h1 { 
+  color: var(--primary); 
+  margin: 0; 
+  font-size: 1.6rem; 
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 20px rgba(0, 210, 255, 0.3); /* Subtle title glow */
+}
 
 .header-right { display: flex; align-items: center; gap: 1rem; }
 
@@ -55,34 +62,99 @@ h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
+}
+
+/* Section Titles (Unified) */
+.section-title {
+  font-size: 0.85rem !important;
+  margin: 0 0 0.8rem 0;
+  color: var(--secondary) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  opacity: 0.9;
 }
 
 /* Layout */
 .main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start; }
 @media (max-width: 950px) { .main-layout { grid-template-columns: 1fr; gap: 1.5rem; } }
 
-/* Cards */
+/* Cards Base */
 .sidebar-card, .summary-card, .logic-card, .table-wrapper {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth animation */
 }
 .sidebar-card, .summary-card, .logic-card { padding: 1.2rem; }
 
+/* --- Desktop Fancy Effects --- */
+@media (hover: hover) {
+  /* Card Glow & Lift */
+  .sidebar-card:hover, .summary-card:hover, .logic-card:hover, .table-wrapper:hover {
+    border-color: rgba(0, 210, 255, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 
+                0 0 15px var(--glow-color);
+  }
+
+  /* Table Row Highlight */
+  .record-table tr:not(.disabled-row):hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Button Hover */
+  .lang-toggle-circle:hover {
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px rgba(58, 237, 202, 0.2);
+    transform: scale(1.05);
+  }
+}
+
 /* Rate Setting UI */
 .rate-setting-group { display: flex; flex-direction: column; gap: 1rem; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.2rem; }
+.setting-label { font-size: 0.85rem; color: #888; font-weight: 500; }
+
 .emp-toggle { display: flex; background: var(--input-bg); padding: 2px; border-radius: 8px; border: 1px solid var(--border); }
-.emp-toggle button { flex: 1; background: transparent; border: none; color: #666; padding: 0.5rem; font-size: 0.8rem; cursor: pointer; border-radius: 6px; font-weight: 600; }
+.emp-toggle button { flex: 1; background: transparent; border: none; color: #666; padding: 0.5rem; font-size: 0.8rem; cursor: pointer; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
 .emp-toggle button.active { background: var(--card-bg); color: var(--secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 .base-rate-hint { font-size: 0.75rem; color: #888; text-align: right; }
-.input-with-symbol { display: inline-flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0 0.6rem; }
-.input-with-symbol input { background: transparent; border: none; color: white; padding: 0.5rem 0.2rem; width: 80px; outline: none; font-size: 1rem; text-align: left; }
+
+/* Unified Input Style in Sidebar */
+.input-with-symbol { 
+  display: inline-flex; 
+  align-items: center; 
+  background: var(--input-bg); 
+  border: 1px solid var(--border); 
+  border-radius: 6px; 
+  padding: 0 0.6rem;
+  width: 100px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.input-with-symbol:focus-within {
+  border-color: var(--primary);
+}
+.input-with-symbol input { 
+  background: transparent; 
+  border: none; 
+  color: white; 
+  padding: 0.5rem 0.2rem; 
+  width: 100%; 
+  outline: none; 
+  font-size: 0.95rem; 
+  text-align: left; 
+}
+.input-with-symbol.mini { border-color: #333; }
+.input-with-symbol.mini input { text-align: left; }
 
 /* Table */
 .record-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .record-table th { background: transparent; color: #8b949e; font-size: 0.9rem; padding: 1.2rem 0.5rem; border-bottom: 1px solid var(--border); letter-spacing: 0.5px; }
-.record-table td { padding: 0.8rem 0.5rem; border-bottom: 1px solid var(--border); }
+.record-table td { padding: 0.8rem 0.5rem; border-bottom: 1px solid var(--border); transition: background 0.2s; }
 .record-table th:nth-child(1), .record-table td:nth-child(1) { width: 60px; }
 .record-table th:nth-child(2), .record-table td:nth-child(2) { width: 80px; }
 .record-table th:nth-child(3), .record-table td:nth-child(3) { width: 130px; }
@@ -94,15 +166,26 @@ h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
 .day-name { font-weight: bold; color: var(--secondary); }
 .disabled-row { background: var(--disabled); opacity: 0.25; }
 .holiday-row { background: var(--holiday); }
-.time-input { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 0.5rem; border-radius: 6px; width: 100%; max-width: 100px; text-align: center; font-size: 0.95rem; color-scheme: dark; }
-input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
+.time-input { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 0.5rem; border-radius: 6px; width: 100%; max-width: 100px; text-align: center; font-size: 0.95rem; color-scheme: dark; transition: border-color 0.2s; }
+.time-input.mini-input { max-width: 60px; }
+.break-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.time-input:focus { border-color: var(--primary); outline: none; }
+input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
 
 /* Logic Card */
 .logic-card { margin-top: 1rem; }
 .logic-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.logic-header .section-title { margin-bottom: 0; }
 .arrow { font-size: 0.7rem; color: var(--secondary); transition: transform 0.3s; }
 .arrow.up { transform: rotate(180deg); }
-.note.highlight { font-size: 0.85rem; color: #ccc; margin: 0.6rem 0; line-height: 1.6; }
+
+/* Note Group Text */
+.note.highlight { 
+  font-size: 0.9rem; 
+  color: #ddd; 
+  margin: 0.6rem 0; 
+  line-height: 1.6; 
+}
 
 .disclaimer-mini {
   margin-top: 1rem;
@@ -126,23 +209,32 @@ input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; }
   text-decoration: none; 
   transition: all 0.2s;
 }
-.fw-link-card:hover { border-color: var(--primary); background: #21262d; }
+.fw-link-card:hover { 
+  border-color: var(--primary); 
+  background: rgba(0, 210, 255, 0.05); 
+  transform: translateX(4px); /* Slide effect on hover */
+}
 .link-title { font-size: 0.85rem; color: #aaa; font-weight: 600; }
 .link-arrow { color: var(--primary); font-weight: bold; }
 .highlight-link { border-color: rgba(0, 210, 255, 0.2); }
 
 /* Sidebar Summary Styles */
-.summary-card h3 { font-size: 0.85rem; margin: 0 0 0.8rem 0; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 .res-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.9rem; }
 .res-label { font-weight: 600; }
-.res-val { color: var(--primary); font-weight: 500; }
+.res-combined { display: flex; align-items: center; gap: 0.4rem; }
+.res-hours { color: var(--primary); font-weight: 500; }
+.res-amount { color: #888; font-size: 0.8rem; font-family: monospace; }
 .separator-line { height: 1px; background: var(--border); margin: 0.8rem 0; width: 100%; }
 .accent-row { background: #1e2a28; margin: 0.5rem -0.8rem 1rem -0.8rem; padding: 0.6rem 0.8rem; border-radius: 8px; }
 .res-val-uniform { font-size: 0.9rem; color: var(--secondary); font-weight: 700; }
 
 /* Mobile Implementation */
+.mobile-only-text { display: none; }
+
 @media (max-width: 600px) {
   .table-wrapper { border: none; background: transparent; }
+  .sidebar-card:hover, .summary-card:hover, .logic-card:hover, .table-wrapper:hover { transform: none; box-shadow: none; } /* Disable fancy effects */
+  
   .record-table, .record-table tbody, .record-table tr, .record-table td { display: block; width: 100% !important; box-sizing: border-box; }
   .record-table thead { display: none; }
   .record-table tr { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }

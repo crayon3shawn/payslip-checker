@@ -23,6 +23,11 @@ export function usePayslip() {
     return saved ? parseFloat(saved) : AU_REGS.DEFAULT_HOURLY_RATE;
   });
 
+  const [minEngagement, setMinEngagement] = useState<number>(() => {
+    const saved = localStorage.getItem('minEngagement');
+    return saved ? parseFloat(saved) : AU_REGS.MIN_ENGAGEMENT_HOURS;
+  });
+
   const [empType, setEmpType] = useState<EmploymentType>(() => {
     const saved = localStorage.getItem('empType');
     return (saved as EmploymentType) || 'casual';
@@ -39,15 +44,16 @@ export function usePayslip() {
       enabled: d.id <= 5,
       startTime: '09:00',
       endTime: '17:00',
-      unpaidBreak: true,
+      breakMinutes: 30,
       isHoliday: false,
     }));
   });
 
   useEffect(() => {
     localStorage.setItem('hourlyRate', hourlyRate.toString());
+    localStorage.setItem('minEngagement', minEngagement.toString());
     localStorage.setItem('empType', empType);
-  }, [hourlyRate, empType]);
+  }, [hourlyRate, minEngagement, empType]);
 
   useEffect(() => {
     localStorage.setItem('payslipRecords', JSON.stringify(records));
@@ -65,13 +71,15 @@ export function usePayslip() {
   }, [records]);
 
   const results = useMemo(() => 
-    getResults(records, hourlyRate, empType, dailyLimit), 
-    [records, hourlyRate, empType, dailyLimit]
+    getResults(records, hourlyRate, empType, dailyLimit, minEngagement), 
+    [records, hourlyRate, empType, dailyLimit, minEngagement]
   );
 
   return {
     hourlyRate,
     setHourlyRate,
+    minEngagement,
+    setMinEngagement,
     empType,
     setEmpType,
     records,

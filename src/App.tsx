@@ -7,7 +7,7 @@ import { en } from './locales/en';
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [showRules, setShowRules] = useState(true); // Default show rules on desktop
-  const { hourlyRate, setHourlyRate, empType, setEmpType, records, updateRecord, results, dailyLimit } = usePayslip();
+  const { hourlyRate, setHourlyRate, minEngagement, setMinEngagement, empType, setEmpType, records, updateRecord, results, dailyLimit } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
 
@@ -44,16 +44,22 @@ function App() {
                     </td>
                     <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                     <td className="center cell-start">
-                      <input type="time" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
+                      <input type="time" step="60" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
                     </td>
                     <td className="center cell-end">
-                      <input type="time" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
+                      <input type="time" step="60" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
                     </td>
                     <td className="center cell-break">
-                      <label className="checkbox-label">
-                        <input type="checkbox" disabled={!r.enabled} checked={r.unpaidBreak} onChange={() => updateRecord(r.id, 'unpaidBreak', !r.unpaidBreak)} />
+                      <div className="break-input-wrapper">
+                        <input 
+                          type="number" 
+                          className="time-input mini-input" 
+                          disabled={!r.enabled} 
+                          value={r.breakMinutes || ''} 
+                          onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
+                        />
                         <span className="mobile-only-text">{t.break}</span>
-                      </label>
+                      </div>
                     </td>
                     <td className="center cell-holiday">
                       <label className="checkbox-label">
@@ -69,12 +75,13 @@ function App() {
 
           <div className="logic-card flat-block">
             <div className="logic-header" onClick={() => setShowRules(!showRules)}>
-              <h3>{t.howItWorks}</h3>
+              <h3 className="section-title">{t.howItWorks}</h3>
               <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
             </div>
             {showRules && (
               <div className="note-group">
                 <p className="note highlight">• <strong>{dailyLimit}h</strong> {t.rule_limit}</p>
+                <p className="note highlight">• {t.rule_minimum}</p>
                 <p className="note highlight">• {t.rule_weekday}</p>
                 <p className="note highlight">• {t.rule_sat}</p>
                 <p className="note highlight">• {t.rule_sun}</p>
@@ -87,12 +94,23 @@ function App() {
 
         <aside className="sidebar">
           <div className="sidebar-card">
-            <h3>{t.rate}</h3>
+            <h3 className="section-title">{t.rate}</h3>
             <div className="rate-setting-group">
-              <div className="input-with-symbol">
-                <span>$</span>
-                <input type="number" value={hourlyRate} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
+              <div className="setting-row">
+                <label className="setting-label">{t.hourlyRateLabel}</label>
+                <div className="input-with-symbol">
+                  <span>$</span>
+                  <input type="number" step="0.01" value={hourlyRate || ''} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
+                </div>
               </div>
+              
+              <div className="setting-row">
+                <label className="setting-label">{t.minEngLabel}</label>
+                <div className="input-with-symbol mini">
+                  <input type="number" step="0.5" value={minEngagement || ''} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
+                </div>
+              </div>
+
               <div className="emp-toggle">
                 <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>{t.permanent}</button>
                 <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>{t.casual}</button>
@@ -106,23 +124,35 @@ function App() {
           </div>
 
           <div className="summary-card flat-block">
-            <h3>{t.summary}</h3>
+            <h3 className="section-title">{t.summary}</h3>
             <div className="result-grid">
               <div className="res-item">
                 <span className="res-label">{t.ord}</span>
-                <strong className="res-val">{results.totalOrdinary.toFixed(1)}h</strong>
+                <div className="res-combined">
+                  <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
+                  <span className="res-amount">(${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                </div>
               </div>
               <div className="res-item">
                 <span className="res-label">{t.ot15}</span>
-                <strong className="res-val">{results.totalOT15.toFixed(1)}h</strong>
+                <div className="res-combined">
+                  <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
+                  <span className="res-amount">(${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                </div>
               </div>
               <div className="res-item">
                 <span className="res-label">{t.ot20}</span>
-                <strong className="res-val">{results.totalOT20.toFixed(1)}h</strong>
+                <div className="res-combined">
+                  <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
+                  <span className="res-amount">(${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                </div>
               </div>
               <div className="res-item">
                 <span className="res-label">{t.hol}</span>
-                <strong className="res-val">{results.totalHoliday.toFixed(1)}h</strong>
+                <div className="res-combined">
+                  <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
+                  <span className="res-amount">(${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
+                </div>
               </div>
               
               <div className="separator-line"></div>
@@ -162,9 +192,9 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.6.0</span>
+            <span className="v-tag-small">v1.6.2</span>
           </div>
-          <p className="privacy-msg-en">{t.privacy}</p>
+          <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">
             <span>Licensed under CC BY 4.0</span>
           </div>

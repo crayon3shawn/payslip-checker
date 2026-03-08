@@ -3,6 +3,7 @@
  */
 export const AU_REGS = {
   WEEKLY_STANDARD_HOURS: 38,    // National standard for full-time
+  MIN_ENGAGEMENT_HOURS: 3.0,    // Award minimum call-out
   UNPAID_BREAK_DURATION: 0.5,   // Standard meal break
   
   // Overtime Tiers (Applied to BASE rate)
