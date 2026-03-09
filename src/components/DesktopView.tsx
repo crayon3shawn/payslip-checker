@@ -6,7 +6,7 @@ interface Props {
   t: Translation;
   lang: 'en' | 'tw';
   records: UIRecord[];
-  updateRecord: any;
+  updateRecord: <K extends keyof UIRecord>(id: number, field: K, value: UIRecord[K]) => void;
   showRules: boolean;
   setShowRules: (v: boolean) => void;
   renderRuleContent: () => React.ReactNode;
@@ -14,6 +14,24 @@ interface Props {
 }
 
 export function DesktopView({ t, lang, records, updateRecord, showRules, setShowRules, renderRuleContent, Sidebar }: Props) {
+  
+  // Smart time formatter: 0630 -> 06:30
+  const formatTimeInput = (val: string): string => {
+    // Remove all non-digits
+    const digits = val.replace(/\D/g, '').slice(0, 4);
+    
+    if (digits.length <= 2) {
+      return digits;
+    } else {
+      return `${digits.slice(0, 2)}:${digits.slice(2)}`;
+    }
+  };
+
+  const onTimeChange = (id: number, field: 'startTime' | 'endTime', rawVal: string) => {
+    const formatted = formatTimeInput(rawVal);
+    updateRecord(id, field, formatted);
+  };
+
   return (
     <div className="main-layout desktop-only-view">
       <section className="input-section">
@@ -37,10 +55,26 @@ export function DesktopView({ t, lang, records, updateRecord, showRules, setShow
                   </td>
                   <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                   <td className="center">
-                    <input type="time" step="60" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
+                    <input 
+                      type="text" 
+                      placeholder="00:00"
+                      value={r.startTime} 
+                      className="time-input" 
+                      disabled={!r.enabled} 
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => onTimeChange(r.id, 'startTime', e.target.value)} 
+                    />
                   </td>
                   <td className="center">
-                    <input type="time" step="60" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
+                    <input 
+                      type="text" 
+                      placeholder="00:00"
+                      value={r.endTime} 
+                      className="time-input" 
+                      disabled={!r.enabled} 
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => onTimeChange(r.id, 'endTime', e.target.value)} 
+                    />
                   </td>
                   <td className="center">
                     <div className="break-input-wrapper">

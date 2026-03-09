@@ -54,7 +54,7 @@ function App() {
 
   const renderRuleContent = () => (
     <div className="note-group">
-      <p className="note highlight">• <strong>Daily Cap: {dailyLimit}h</strong> – {t.rule_limit}</p>
+      {renderRule(t.rule_limit)}
       {renderRule(t.rule_minimum)}
       {renderRule(t.rule_break)}
       {renderRule(t.rule_weekday)}
@@ -103,60 +103,60 @@ function App() {
         <div className="result-grid">
           <div className="res-item">
             <span className="res-label">{t.ord}</span>
-            <div className="res-combined">
-              <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
-              <span className="res-amount">(${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-            </div>
+            <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
+            <span className="res-amount">${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
           <div className="res-item">
             <span className="res-label">{t.ot15}</span>
-            <div className="res-combined">
-              <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
-              <span className="res-amount">(${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-            </div>
+            <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
+            <span className="res-amount">${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
           <div className="res-item">
             <span className="res-label">{t.ot20}</span>
-            <div className="res-combined">
-              <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
-              <span className="res-amount">(${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-            </div>
+            <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
+            <span className="res-amount">${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
           <div className="res-item">
             <span className="res-label">{t.hol}</span>
-            <div className="res-combined">
-              <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
-              <span className="res-amount">(${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})})</span>
-            </div>
+            <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
+            <span className="res-amount">${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
+          
           <div className="separator-line"></div>
+          
           <div className="res-item accent-row">
             <span className="res-label">{t.gross}</span>
+            <span className="res-hours"></span> {/* Grid spacer */}
             <strong className={`res-val-uniform ${isPulsing ? 'gross-pulse' : ''}`}>
               ${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}
             </strong>
           </div>
+          
           <div className="res-item">
             <span className="res-label">{t.super} (OTE)</span>
+            <span className="res-hours"></span> {/* Grid spacer */}
             <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
           </div>
         </div>
+        
         <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
           {copied ? t.copyDone : t.copyBtn}
         </button>
       </div>
-
-      <div className="resource-links desktop-only-block">
-        <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
-           <span className="link-title">{t.fwo_site}</span>
-           <span className="link-arrow">→</span>
-        </a>
-        <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
-           <span className="link-title">{t.fwo_calc}</span>
-           <span className="link-arrow">→</span>
-        </a>
-      </div>
     </>
+  );
+
+  const ResourceLinks = (
+    <div className="resource-links">
+      <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
+         <span className="link-title">{t.fwo_site}</span>
+         <span className="link-arrow">→</span>
+      </a>
+      <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
+         <span className="link-title">{t.fwo_calc}</span>
+         <span className="link-arrow">→</span>
+      </a>
+    </div>
   );
 
   return (
@@ -177,13 +177,14 @@ function App() {
       <DesktopView 
         t={t} lang={lang} records={records} updateRecord={updateRecord} 
         showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-        Sidebar={SidebarContent}
+        Sidebar={<>{SidebarContent}{ResourceLinks}</>}
       />
 
       <MobileView 
         t={t} lang={lang} records={records} updateRecord={updateRecord} 
         showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-        Sidebar={SidebarContent}
+        Sidebar={<>{SidebarContent}</>}
+        ResourceLinks={ResourceLinks}
       />
 
       {showResetModal && (
@@ -200,7 +201,7 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.7.1</span>
+            <span className="v-tag-small">v1.7.4</span>
           </div>
           <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">

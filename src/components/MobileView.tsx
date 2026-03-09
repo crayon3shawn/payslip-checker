@@ -11,9 +11,10 @@ interface Props {
   setShowRules: (v: boolean) => void;
   renderRuleContent: () => React.ReactNode;
   Sidebar: React.ReactNode;
+  ResourceLinks: React.ReactNode;
 }
 
-export function MobileView({ t, lang, records, updateRecord, showRules, setShowRules, renderRuleContent, Sidebar }: Props) {
+export function MobileView({ t, lang, records, updateRecord, showRules, setShowRules, renderRuleContent, Sidebar, ResourceLinks }: Props) {
   return (
     <div className="mobile-only-view">
       <div className="mobile-cards">
@@ -29,7 +30,7 @@ export function MobileView({ t, lang, records, updateRecord, showRules, setShowR
                 <span className="mobile-day-name">{lang === 'en' ? r.day : r.dayCn}</span>
               </label>
               <label className="mobile-holiday-label">
-                <span className="mobile-only-text">{t.holiday}</span>
+                <span className="mobile-label-text">{t.holiday}</span>
                 <input 
                   type="checkbox" 
                   disabled={!r.enabled} 
@@ -39,29 +40,26 @@ export function MobileView({ t, lang, records, updateRecord, showRules, setShowR
               </label>
             </div>
 
-            <div className="mobile-row-2">
-              <div className="time-input-group">
-                <span className="mobile-only-text">{t.start}</span>
-                <input type="time" step="60" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
-              </div>
-              <div className="time-input-group">
-                <span className="mobile-only-text">{t.end}</span>
-                <input type="time" step="60" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
-              </div>
+            <div className="mobile-row-stacked">
+              <span className="mobile-label-text">{t.start}</span>
+              <input type="time" step="60" value={r.startTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'startTime', e.target.value)} />
             </div>
 
-            <div className="mobile-row-3">
-              <div className="break-input-wrapper">
-                <span className="mobile-only-text">{t.break}</span>
-                <input 
-                  type="number" 
-                  className="time-input mini-input" 
-                  disabled={!r.enabled} 
-                  value={r.breakMinutes || ''} 
-                  onFocus={(e) => e.target.select()}
-                  onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
-                />
-              </div>
+            <div className="mobile-row-stacked">
+              <span className="mobile-label-text">{t.end}</span>
+              <input type="time" step="60" value={r.endTime} className="time-input" disabled={!r.enabled} onChange={(e) => updateRecord(r.id, 'endTime', e.target.value)} />
+            </div>
+
+            <div className="mobile-row-stacked">
+              <span className="mobile-label-text">{t.break}</span>
+              <input 
+                type="number" 
+                className="time-input" 
+                disabled={!r.enabled} 
+                value={r.breakMinutes || ''} 
+                onFocus={(e) => e.target.select()}
+                onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
+              />
             </div>
           </div>
         ))}
@@ -76,6 +74,7 @@ export function MobileView({ t, lang, records, updateRecord, showRules, setShowR
           </div>
           {showRules && renderRuleContent()}
         </div>
+        {ResourceLinks}
       </div>
     </div>
   );
