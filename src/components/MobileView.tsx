@@ -15,11 +15,17 @@ interface Props {
 }
 
 export function MobileView({ t, lang, records, updateRecord, showRules, setShowRules, renderRuleContent, Sidebar, ResourceLinks }: Props) {
+  const smokoPresets = [30, 50, 65];
+
   return (
     <div className="mobile-only-view">
       <div className="mobile-cards">
-        {records.map(r => (
-          <div key={r.id} className={`mobile-record-card ${r.enabled ? '' : 'disabled-row'} ${r.isHoliday ? 'holiday-row' : ''}`}>
+        {records.map((r, i) => (
+          <div 
+            key={r.id} 
+            className={`mobile-record-card spring-entry ${r.enabled ? '' : 'disabled-row'} ${r.isHoliday ? 'holiday-row' : ''}`}
+            style={{ animationDelay: `${i * 0.05}s` }}
+          >
             <div className="mobile-row-1">
               <label className="mobile-day-label">
                 <input 
@@ -52,20 +58,34 @@ export function MobileView({ t, lang, records, updateRecord, showRules, setShowR
 
             <div className="mobile-row-stacked">
               <span className="mobile-label-text">{t.break}</span>
-              <input 
-                type="number" 
-                className="time-input" 
-                disabled={!r.enabled} 
-                value={r.breakMinutes || ''} 
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
-              />
+              <div className="mobile-smoko-input-area">
+                <input 
+                  type="number" 
+                  className="time-input smoko-input" 
+                  disabled={!r.enabled} 
+                  value={r.breakMinutes || ''} 
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
+                />
+                <div className="smoko-presets">
+                  {smokoPresets.map(mins => (
+                    <button 
+                      key={mins} 
+                      className={`preset-btn ${r.breakMinutes === mins ? 'active' : ''}`}
+                      disabled={!r.enabled}
+                      onClick={() => updateRecord(r.id, 'breakMinutes', mins)}
+                    >
+                      {mins}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         ))}
       </div>
       
-      <div className="mobile-sidebar-area">
+      <div className="mobile-sidebar-area spring-entry" style={{ animationDelay: '0.4s' }}>
         {Sidebar}
         <div className="logic-card flat-block">
           <div className="logic-header" onClick={() => setShowRules(!showRules)}>

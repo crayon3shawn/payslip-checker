@@ -14,6 +14,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   
   const { 
     hourlyRate, setHourlyRate, 
@@ -24,6 +25,12 @@ function App() {
   } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (results.grossPay > 0) {
@@ -121,24 +128,20 @@ function App() {
             <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
             <span className="res-amount">${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
-          
           <div className="separator-line"></div>
-          
           <div className="res-item accent-row">
             <span className="res-label">{t.gross}</span>
-            <span className="res-hours"></span> {/* Grid spacer */}
+            <span className="res-hours"></span>
             <strong className={`res-val-uniform ${isPulsing ? 'gross-pulse' : ''}`}>
               ${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}
             </strong>
           </div>
-          
-          <div className="res-item">
+          <div className="res-item accent-row super-row">
             <span className="res-label">{t.super} (OTE)</span>
-            <span className="res-hours"></span> {/* Grid spacer */}
+            <span className="res-hours"></span>
             <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
           </div>
         </div>
-        
         <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
           {copied ? t.copyDone : t.copyBtn}
         </button>
@@ -174,18 +177,20 @@ function App() {
         </div>
       </header>
 
-      <DesktopView 
-        t={t} lang={lang} records={records} updateRecord={updateRecord} 
-        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-        Sidebar={<>{SidebarContent}{ResourceLinks}</>}
-      />
-
-      <MobileView 
-        t={t} lang={lang} records={records} updateRecord={updateRecord} 
-        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-        Sidebar={<>{SidebarContent}</>}
-        ResourceLinks={ResourceLinks}
-      />
+      {isMobile ? (
+        <MobileView 
+          t={t} lang={lang} records={records} updateRecord={updateRecord} 
+          showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+          Sidebar={SidebarContent}
+          ResourceLinks={ResourceLinks}
+        />
+      ) : (
+        <DesktopView 
+          t={t} lang={lang} records={records} updateRecord={updateRecord} 
+          showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+          Sidebar={<>{SidebarContent}{ResourceLinks}</>}
+        />
+      )}
 
       {showResetModal && (
         <ResetModal t={t} onConfirm={() => { resetAllData(); setShowResetModal(false); }} onCancel={() => setShowResetModal(false)} />
@@ -201,7 +206,7 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.7.4</span>
+            <span className="v-tag-small">v1.7.7</span>
           </div>
           <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
           <div className="footer-row license-line">

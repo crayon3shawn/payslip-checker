@@ -3,7 +3,7 @@ export const tw = {
   rate: '薪資設定',
   hourlyRateLabel: '時薪',
   empType: '雇用身分',
-  permanent: '正式',
+  permanent: '正職(FT/PT)',
   casual: '臨時 (Casual)',
   baseRateHint: '計算基準時薪',
   minEngLabel: 'Award 最低保障時數',

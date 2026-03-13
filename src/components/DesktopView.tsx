@@ -15,16 +15,10 @@ interface Props {
 
 export function DesktopView({ t, lang, records, updateRecord, showRules, setShowRules, renderRuleContent, Sidebar }: Props) {
   
-  // Smart time formatter: 0630 -> 06:30
   const formatTimeInput = (val: string): string => {
-    // Remove all non-digits
     const digits = val.replace(/\D/g, '').slice(0, 4);
-    
-    if (digits.length <= 2) {
-      return digits;
-    } else {
-      return `${digits.slice(0, 2)}:${digits.slice(2)}`;
-    }
+    if (digits.length <= 2) return digits;
+    return `${digits.slice(0, 2)}:${digits.slice(2)}`;
   };
 
   const onTimeChange = (id: number, field: 'startTime' | 'endTime', rawVal: string) => {
@@ -34,7 +28,7 @@ export function DesktopView({ t, lang, records, updateRecord, showRules, setShow
 
   return (
     <div className="main-layout desktop-only-view">
-      <section className="input-section">
+      <section className="input-section spring-entry">
         <div className="table-wrapper">
           <table className="record-table">
             <thead>
@@ -55,38 +49,13 @@ export function DesktopView({ t, lang, records, updateRecord, showRules, setShow
                   </td>
                   <td className="day-name center cell-day">{lang === 'en' ? r.day : r.dayCn}</td>
                   <td className="center">
-                    <input 
-                      type="text" 
-                      placeholder="00:00"
-                      value={r.startTime} 
-                      className="time-input" 
-                      disabled={!r.enabled} 
-                      onFocus={(e) => e.target.select()}
-                      onChange={(e) => onTimeChange(r.id, 'startTime', e.target.value)} 
-                    />
+                    <input type="text" placeholder="00:00" value={r.startTime} className="time-input" disabled={!r.enabled} onFocus={(e) => e.target.select()} onChange={(e) => onTimeChange(r.id, 'startTime', e.target.value)} />
                   </td>
                   <td className="center">
-                    <input 
-                      type="text" 
-                      placeholder="00:00"
-                      value={r.endTime} 
-                      className="time-input" 
-                      disabled={!r.enabled} 
-                      onFocus={(e) => e.target.select()}
-                      onChange={(e) => onTimeChange(r.id, 'endTime', e.target.value)} 
-                    />
+                    <input type="text" placeholder="00:00" value={r.endTime} className="time-input" disabled={!r.enabled} onFocus={(e) => e.target.select()} onChange={(e) => onTimeChange(r.id, 'endTime', e.target.value)} />
                   </td>
                   <td className="center">
-                    <div className="break-input-wrapper">
-                      <input 
-                        type="number" 
-                        className="time-input mini-input" 
-                        disabled={!r.enabled} 
-                        value={r.breakMinutes || ''} 
-                        onFocus={(e) => e.target.select()}
-                        onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} 
-                      />
-                    </div>
+                    <input type="number" className="time-input mini-input" disabled={!r.enabled} value={r.breakMinutes || ''} onFocus={(e) => e.target.select()} onChange={(e) => updateRecord(r.id, 'breakMinutes', parseInt(e.target.value) || 0)} />
                   </td>
                   <td className="center">
                     <input type="checkbox" disabled={!r.enabled} checked={r.isHoliday} onChange={() => updateRecord(r.id, 'isHoliday', !r.isHoliday)} />
@@ -105,7 +74,7 @@ export function DesktopView({ t, lang, records, updateRecord, showRules, setShow
           {showRules && renderRuleContent()}
         </div>
       </section>
-      <aside className="sidebar">
+      <aside className="sidebar spring-entry" style={{ animationDelay: '0.15s' }}>
         {Sidebar}
       </aside>
     </div>
