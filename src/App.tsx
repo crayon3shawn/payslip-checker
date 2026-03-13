@@ -21,7 +21,7 @@ function App() {
     minEngagement, setMinEngagement, 
     empType, setEmpType, 
     records, updateRecord, 
-    results, dailyLimit, resetAllData 
+    results, resetAllData 
   } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
