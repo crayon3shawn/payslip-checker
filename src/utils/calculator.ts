@@ -19,9 +19,17 @@ export const calculateHours = (start: string, end: string) => {
   return diff;
 };
 
+export interface DailyBreakdown {
+  id: number;
+  totalHours: number;
+  ordHours: number;
+  otHours: number;
+  holHours: number;
+}
+
 export const getResults = (records: DailyRecord[], hourlyRate: number, empType: EmploymentType, dailyLimit: number, minEngagement: number) => {
-  const baseRate = empType === 'casual' 
-    ? hourlyRate / (1 + AU_REGS.CASUAL_LOADING) 
+  const baseRate = empType === 'casual'
+    ? hourlyRate / (1 + AU_REGS.CASUAL_LOADING)
     : hourlyRate;
 
   let summary = {
@@ -35,15 +43,17 @@ export const getResults = (records: DailyRecord[], hourlyRate: number, empType: 
     payHoliday: 0,
   };
 
+  const dailyBreakdown: DailyBreakdown[] = [];
+
   records.filter(r => r.enabled).forEach(r => {
     const dailyGross = calculateHours(r.startTime, r.endTime);
     let netHours = Math.max(0, dailyGross - (r.breakMinutes / 60));
-    
+
     // Apply Minimum Engagement
     if (netHours > 0) {
       netHours = Math.max(netHours, minEngagement);
     }
-    
+
     let ord = 0, ot15 = 0, ot20 = 0, hol = 0;
     const dayIndex = r.id; // 1=Mon, 6=Sat, 7=Sun
 
@@ -61,10 +71,10 @@ export const getResults = (records: DailyRecord[], hourlyRate: number, empType: 
     } else {
       ord = Math.min(netHours, dailyLimit);
       const remaining = Math.max(0, netHours - dailyLimit);
-      
+
       ot15 = Math.min(remaining, AU_REGS.WEEKDAY_OT_LEVEL_1_LIMIT);
       ot20 = Math.max(0, remaining - AU_REGS.WEEKDAY_OT_LEVEL_1_LIMIT);
-      
+
       const ordRate = empType === 'casual' ? hourlyRate : baseRate;
       summary.payOrdinary += ord * ordRate;
       summary.payOT15 += ot15 * baseRate * AU_REGS.OT_LEVEL_1;
@@ -75,11 +85,19 @@ export const getResults = (records: DailyRecord[], hourlyRate: number, empType: 
     summary.totalOT15 = Math.round((summary.totalOT15 + ot15) * 100) / 100;
     summary.totalOT20 = Math.round((summary.totalOT20 + ot20) * 100) / 100;
     summary.totalHoliday = Math.round((summary.totalHoliday + hol) * 100) / 100;
+
+    dailyBreakdown.push({
+      id: r.id,
+      totalHours: Math.round(netHours * 10) / 10,
+      ordHours: Math.round(ord * 10) / 10,
+      otHours: Math.round((ot15 + ot20) * 10) / 10,
+      holHours: Math.round(hol * 10) / 10,
+    });
   });
 
   // Rounding for precision
   const grossPay = Math.round((summary.payOrdinary + summary.payOT15 + summary.payOT20 + summary.payHoliday) * 100) / 100;
-  
+
   // Super Guarantee (12%) is calculated based on Ordinary Time Earnings (OTE) only.
   const superGuarantee = Math.round(summary.payOrdinary * AU_REGS.SUPER_GUARANTEE_RATE * 100) / 100;
 
@@ -87,6 +105,7 @@ export const getResults = (records: DailyRecord[], hourlyRate: number, empType: 
     ...summary,
     grossPay,
     superGuarantee,
-    baseRate: Math.round(baseRate * 100) / 100
+    baseRate: Math.round(baseRate * 100) / 100,
+    dailyBreakdown,
   };
 };

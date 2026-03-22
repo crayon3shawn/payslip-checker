@@ -5,32 +5,24 @@ import { tw } from './locales/tw';
 import { en } from './locales/en';
 import { formatPaySummary } from './utils/formatters';
 import { ResetModal } from './components/ResetModal';
-import { DesktopView } from './components/DesktopView';
-import { MobileView } from './components/MobileView';
+import { MainView } from './components/MainView';
 
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
-  const [showRules, setShowRules] = useState(true); 
+  const [showRules, setShowRules] = useState(true);
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
-  
-  const { 
-    hourlyRate, setHourlyRate, 
-    minEngagement, setMinEngagement, 
-    empType, setEmpType, 
-    records, updateRecord, 
-    results, resetAllData 
+
+  const {
+    hourlyRate, setHourlyRate,
+    minEngagement, setMinEngagement,
+    empType, setEmpType,
+    records, updateRecord,
+    results, resetAllData
   } = usePayslip();
 
   const t = lang === 'en' ? en : tw;
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 600);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     if (results.grossPay > 0) {
@@ -75,22 +67,45 @@ function App() {
     </div>
   );
 
+  // Day names for daily hours section
+  const DAY_NAMES: Record<number, { en: string; tw: string }> = {
+    1: { en: 'Mon', tw: '週一' },
+    2: { en: 'Tue', tw: '週二' },
+    3: { en: 'Wed', tw: '週三' },
+    4: { en: 'Thu', tw: '週四' },
+    5: { en: 'Fri', tw: '週五' },
+    6: { en: 'Sat', tw: '週六' },
+    7: { en: 'Sun', tw: '週日' },
+  };
+
   const SidebarContent = (
     <>
+      {/* HOURLY RATE */}
       <div className="sidebar-card">
-        <h3 className="section-title">{t.rate}</h3>
-        <div className="rate-setting-group">
-          <div className="setting-row">
-            <label className="setting-label">{t.hourlyRateLabel}</label>
-            <div className="input-with-symbol">
-              <span>$</span>
-              <input type="number" step="0.01" value={hourlyRate || ''} onFocus={(e) => e.target.select()} onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
-            </div>
+        <h3 className="section-title">{t.hourlyRateLabel}</h3>
+        <div className="rate-input-row">
+          <div className="input-with-symbol rate-big">
+            <span>$</span>
+            <input
+              type="number"
+              step="0.01"
+              value={hourlyRate || ''}
+              onFocus={(e) => e.target.select()}
+              onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+            />
           </div>
-          <div className="setting-row">
-            <label className="setting-label">{t.minEngLabel}</label>
+        </div>
+        <div className="emp-settings-compact">
+          <div className="setting-row-mini">
+            <span className="setting-label">{t.minEngLabel}</span>
             <div className="input-with-symbol mini">
-              <input type="number" step="0.5" value={minEngagement || ''} onFocus={(e) => e.target.select()} onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)} />
+              <input
+                type="number"
+                step="0.5"
+                value={minEngagement || ''}
+                onFocus={(e) => e.target.select()}
+                onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)}
+              />
             </div>
           </div>
           <div className="emp-toggle">
@@ -105,59 +120,74 @@ function App() {
         </div>
       </div>
 
+      {/* PAY OVERVIEW */}
       <div className="summary-card flat-block">
         <h3 className="section-title">{t.summary}</h3>
-        <div className="result-grid">
-          <div className="res-item">
-            <span className="res-label">{t.ord}</span>
-            <span className="res-hours">{results.totalOrdinary.toFixed(2)}h</span>
-            <span className="res-amount">${results.payOrdinary.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+        <div className="pay-overview-grid">
+          <div className="po-row">
+            <span className="po-label">{t.ord}</span>
+            <span className="po-hours">{results.totalOrdinary.toFixed(1)}h</span>
           </div>
-          <div className="res-item">
-            <span className="res-label">{t.ot15}</span>
-            <span className="res-hours">{results.totalOT15.toFixed(2)}h</span>
-            <span className="res-amount">${results.payOT15.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+          <div className="po-row">
+            <span className="po-label">{t.ot15}</span>
+            <span className="po-hours">{results.totalOT15.toFixed(1)}h</span>
           </div>
-          <div className="res-item">
-            <span className="res-label">{t.ot20}</span>
-            <span className="res-hours">{results.totalOT20.toFixed(2)}h</span>
-            <span className="res-amount">${results.payOT20.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+          <div className="po-row">
+            <span className="po-label">{t.hol}</span>
+            <span className="po-hours">{(results.totalOT20 + results.totalHoliday).toFixed(1)}h</span>
           </div>
-          <div className="res-item">
-            <span className="res-label">{t.hol}</span>
-            <span className="res-hours">{results.totalHoliday.toFixed(2)}h</span>
-            <span className="res-amount">${results.payHoliday.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-          </div>
-          <div className="separator-line"></div>
-          <div className="res-item accent-row">
-            <span className="res-label">{t.gross}</span>
-            <span className="res-hours"></span>
-            <strong className={`res-val-uniform ${isPulsing ? 'gross-pulse' : ''}`}>
-              ${results.grossPay.toLocaleString(undefined, {minimumFractionDigits: 2})}
+          <div className="po-separator"></div>
+          <div className="po-row po-accent">
+            <span className="po-label">{t.gross}</span>
+            <strong className={`po-amount ${isPulsing ? 'gross-pulse' : ''}`}>
+              ${results.grossPay.toLocaleString(undefined, { minimumFractionDigits: 3 })}
             </strong>
           </div>
-          <div className="res-item accent-row super-row">
-            <span className="res-label">{t.super} (OTE)</span>
-            <span className="res-hours"></span>
-            <strong className="res-val-uniform">${results.superGuarantee.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+          <div className="po-row po-super">
+            <span className="po-label">{t.super} (12%)</span>
+            <strong className="po-amount po-super-amount">
+              ${results.superGuarantee.toLocaleString(undefined, { minimumFractionDigits: 3 })}
+            </strong>
           </div>
         </div>
         <button className={`copy-summary-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
           {copied ? t.copyDone : t.copyBtn}
         </button>
       </div>
+
+      {/* DAILY HOURS */}
+      {results.dailyBreakdown.length > 0 && (
+        <div className="sidebar-card">
+          <h3 className="section-title">{t.details}</h3>
+          <div className="daily-hours-list">
+            {results.dailyBreakdown.map((d) => {
+              const names = DAY_NAMES[d.id];
+              const dayName = lang === 'en' ? names?.en : names?.tw;
+              return (
+                <div key={d.id} className="daily-hours-row">
+                  <span className="dh-day">{dayName}</span>
+                  <span className="dh-total">{d.totalHours}h</span>
+                  <span className="dh-detail">
+                    ORD:{d.ordHours} | OT:{d.otHours} | H:{d.holHours}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </>
   );
 
   const ResourceLinks = (
     <div className="resource-links">
       <a href="https://www.fairwork.gov.au/" target="_blank" rel="noreferrer" className="fw-link-card">
-         <span className="link-title">{t.fwo_site}</span>
-         <span className="link-arrow">→</span>
+        <span className="link-title">{t.fwo_site}</span>
+        <span className="link-arrow">→</span>
       </a>
       <a href="https://calculate.fairwork.gov.au/FindYourAward" target="_blank" rel="noreferrer" className="fw-link-card highlight-link">
-         <span className="link-title">{t.fwo_calc}</span>
-         <span className="link-arrow">→</span>
+        <span className="link-title">{t.fwo_calc}</span>
+        <span className="link-arrow">→</span>
       </a>
     </div>
   );
@@ -177,25 +207,17 @@ function App() {
         </div>
       </header>
 
-      {isMobile ? (
-        <MobileView 
-          t={t} lang={lang} records={records} updateRecord={updateRecord} 
-          showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-          Sidebar={SidebarContent}
-          ResourceLinks={ResourceLinks}
-        />
-      ) : (
-        <DesktopView 
-          t={t} lang={lang} records={records} updateRecord={updateRecord} 
-          showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
-          Sidebar={<>{SidebarContent}{ResourceLinks}</>}
-        />
-      )}
+      <MainView
+        t={t} lang={lang} records={records} updateRecord={updateRecord}
+        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+        Sidebar={SidebarContent}
+        ResourceLinks={ResourceLinks}
+      />
 
       {showResetModal && (
         <ResetModal t={t} onConfirm={() => { resetAllData(); setShowResetModal(false); }} onCancel={() => setShowResetModal(false)} />
       )}
-      
+
       <footer className="version-footer">
         <div className="footer-centered-content">
           <div className="footer-row main-line">

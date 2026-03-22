@@ -15,7 +15,7 @@ export const en: Translation = {
   end: 'END',
   break: 'Unpaid Smoko (m)',
   holiday: 'Public Holiday',
-  summary: 'Pay Summary',
+  summary: 'Pay Overview',
   ord: 'Ordinary Time',
   ot15: 'Overtime (1.5x)',
   ot20: 'Overtime (2.0x)',

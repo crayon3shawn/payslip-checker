@@ -4,7 +4,7 @@
 export const AU_REGS = {
   WEEKLY_STANDARD_HOURS: 38,    // National standard for full-time
   MIN_ENGAGEMENT_HOURS: 3.0,    // Award minimum call-out
-  UNPAID_BREAK_DURATION: 50,    // Default 50m Smoko
+  UNPAID_BREAK_DURATION: 30,    // Default 30m unpaid break
   
   // Overtime Tiers (Applied to BASE rate)
   WEEKDAY_OT_LEVEL_1_LIMIT: 3.0, // First 3 hours on weekdays
