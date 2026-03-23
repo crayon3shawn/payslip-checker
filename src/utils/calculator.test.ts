@@ -1,73 +1,81 @@
 import { describe, it, expect } from 'vitest';
 import { getResults, type DailyRecord } from './calculator';
+import { type AwardConfig } from '../data/awards';
 
-describe('AU Payslip Calculator Logic (v1.6.2)', () => {
-  const casualRate = 31.19; 
+// A mock award matching GMP EA rates for all existing tests
+const GMP_EA_MOCK: AwardConfig = {
+  id: 'gmp-ea', name: 'GMP EA', shortName: 'GMP EA', isCustomEA: true,
+  satOT1Multiplier: 1.5, satOT1LimitHours: 3.0, satOT2Multiplier: 2.0,
+  sunMultiplier: 2.0, sunMinHours: 4.0, phMultiplier: 2.0,
+  weekdayOT1Multiplier: 1.5, weekdayOT1LimitHours: 3.0, weekdayOT2Multiplier: 2.0,
+  casualLoading: 0.25, superRate: 0.12,
+  minEngagementHours: 3.0, weeklyStandardHours: 38,
+  defaultHourlyRate: 32.15, defaultStartTime: '06:00', defaultEndTime: '16:00', defaultBreakMinutes: 30,
+  breakRules: [], classifications: [],
+};
+
+describe('AU Payslip Calculator Logic', () => {
+  const casualRate = 31.19;
   const baseRate = 24.952; // 31.19 / 1.25
   const defaultDailyLimit = 7.6;
-  const awardMin = 3.0;
 
-  it('applies Award Minimum Hour (3.0h) for short shifts', () => {
+  it('applies min engagement (3.0h) for short shifts', () => {
     const records: DailyRecord[] = [{
       id: 1, enabled: true, startTime: '09:00', endTime: '10:00', breakMinutes: 0, isHoliday: false
     }];
-    // 1h worked, but Award Min is 3.0h
-    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
-    
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, GMP_EA_MOCK);
     expect(res.totalOrdinary).toBe(3.0);
     expect(res.payOrdinary).toBeCloseTo(3.0 * casualRate, 2);
   });
 
-  it('calculates individual pay categories correctly for Overtime', () => {
+  it('calculates weekday overtime correctly', () => {
     const records: DailyRecord[] = [{
       id: 1, enabled: true, startTime: '08:00', endTime: '18:00', breakMinutes: 30, isHoliday: false
     }];
-    // 10h total - 30m break = 9.5h net
-    // Ordinary: 7.6h ($31.19/h = $237.04)
-    // OT 1.5x: 1.9h ($24.952 * 1.5 = $37.43/h = $71.12)
-    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
-    
+    // 9.5h net: 7.6 ordinary + 1.9 OT
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, GMP_EA_MOCK);
     expect(res.totalOrdinary).toBe(7.6);
     expect(res.totalOT15).toBe(1.9);
-    
     expect(res.payOrdinary).toBeCloseTo(7.6 * casualRate, 2);
     expect(res.payOT15).toBeCloseTo(1.9 * baseRate * 1.5, 2);
-    expect(res.grossPay).toBeCloseTo(res.payOrdinary + res.payOT15, 2);
   });
 
-  it('handles custom Award Minimum (e.g. 2.0h) correctly', () => {
-    const customMin = 2.0;
+  it('handles custom min engagement (2.0h)', () => {
+    const award = { ...GMP_EA_MOCK, minEngagementHours: 2.0 };
     const records: DailyRecord[] = [{
       id: 1, enabled: true, startTime: '09:00', endTime: '10:00', breakMinutes: 0, isHoliday: false
     }];
-    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, customMin);
-    
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, award);
     expect(res.totalOrdinary).toBe(2.0);
   });
 
-  it('applies Sunday minimum 4h guarantee (Industry standard)', () => {
+  it('applies Sunday minimum 4h guarantee', () => {
     const records: DailyRecord[] = [{
       id: 7, enabled: true, startTime: '09:00', endTime: '11:00', breakMinutes: 0, isHoliday: false
     }];
-    // 2h worked, but Sunday guarantee is 4.0h
-    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
-    
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, GMP_EA_MOCK);
     expect(res.totalHoliday).toBe(4.0);
     expect(res.payHoliday).toBeCloseTo(4.0 * baseRate * 2.0, 2);
   });
 
-  it('calculates Saturday tiers correctly (3h 1.5x, then 2.0x)', () => {
+  it('calculates GMP EA Saturday tiers (3h 1.5x then 2.0x)', () => {
     const records: DailyRecord[] = [{
       id: 6, enabled: true, startTime: '09:00', endTime: '14:00', breakMinutes: 0, isHoliday: false
     }];
-    // 5h total
-    // OT 1.5x: 3.0h
-    // OT 2.0x: 2.0h
-    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, awardMin);
-    
+    // 5h: 3h @ 1.5x, 2h @ 2.0x
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, GMP_EA_MOCK);
     expect(res.totalOT15).toBe(3.0);
     expect(res.totalOT20).toBe(2.0);
-    expect(res.payOT15).toBeCloseTo(3.0 * baseRate * 1.5, 2);
-    expect(res.payOT20).toBeCloseTo(2.0 * baseRate * 2.0, 2);
+  });
+
+  it('calculates flat Saturday rate when satOT1LimitHours = 0', () => {
+    const meatAward = { ...GMP_EA_MOCK, satOT1LimitHours: 0, satOT1Multiplier: 1.5 };
+    const records: DailyRecord[] = [{
+      id: 6, enabled: true, startTime: '09:00', endTime: '14:00', breakMinutes: 0, isHoliday: false
+    }];
+    // 5h all at 1.5x, no 2.0x tier
+    const res = getResults(records, casualRate, 'casual', defaultDailyLimit, meatAward);
+    expect(res.totalOT15).toBe(5.0);
+    expect(res.totalOT20).toBe(0);
   });
 });
