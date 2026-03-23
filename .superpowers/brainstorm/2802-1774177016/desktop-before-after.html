@@ -1,0 +1,414 @@
+<style>
+  :root {
+    --primary: #00d2ff;
+    --secondary: #3aedca;
+    --bg: #0f1115;
+    --card-bg: #1a1d23;
+    --text: #e0e6ed;
+    --border: #2d333d;
+    --input-bg: #24292f;
+    --label-color: #8b949e;
+    --danger: #ff4d4d;
+  }
+
+  .mock-app {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    font-size: 12px;
+    width: 700px;
+  }
+
+  .mock-header {
+    background: var(--bg);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mock-h1 {
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 15px rgba(0,210,255,0.3);
+  }
+
+  .mock-body {
+    display: grid;
+    grid-template-columns: 1fr 210px;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .mock-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .mock-section-title {
+    color: var(--secondary);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+  }
+
+  /* Records table */
+  .records-table {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .records-thead {
+    display: grid;
+    grid-template-columns: 36px 64px 1fr 1fr 72px 56px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--label-color);
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .records-row {
+    display: grid;
+    grid-template-columns: 36px 64px 1fr 1fr 72px 56px;
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(45,51,61,0.5);
+    align-items: center;
+    text-align: center;
+  }
+
+  .records-row:last-child { border-bottom: none; }
+  .records-row.disabled { opacity: 0.35; }
+  .records-row.holiday { background: rgba(255,77,77,0.05); }
+
+  .time-mock {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 5px;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .day-label { color: var(--text); font-weight: 600; text-align: left; }
+  .check-mock { width: 12px; height: 12px; border: 1px solid var(--primary); border-radius: 2px; background: rgba(0,210,255,0.2); margin: 0 auto; }
+  .check-mock.off { background: transparent; border-color: var(--border); }
+
+  /* Sidebar */
+  .rate-big { display: flex; align-items: center; gap: 6px; }
+  .rate-big .dollar { color: var(--label-color); font-size: 13px; }
+  .rate-big input { background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 6px; padding: 5px 8px; font-size: 18px; font-weight: 700; width: 80px; color: var(--primary); }
+
+  .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; font-size: 11px; }
+  .lbl { color: var(--label-color); }
+
+  .emp-toggle { display: flex; gap: 4px; }
+  .emp-btn { background: var(--input-bg); border: 1px solid var(--border); color: var(--label-color); border-radius: 5px; padding: 3px 9px; font-size: 10px; cursor: pointer; }
+  .emp-btn.active { background: rgba(0,210,255,0.1); border-color: var(--primary); color: var(--primary); font-weight: 700; }
+
+  .po-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 11px; }
+  .po-accent { font-weight: 700; font-size: 13px; }
+
+  .sep { border: none; border-top: 1px solid var(--border); margin: 7px 0; }
+
+  /* NEW award row */
+  .award-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,210,255,0.04);
+    border: 1px solid rgba(0,210,255,0.15);
+    border-radius: 7px;
+    padding: 6px 9px;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .award-row:hover { border-color: var(--primary); }
+  .award-name-val { color: var(--secondary); font-weight: 700; font-size: 11px; }
+  .award-hint { color: var(--label-color); font-size: 9px; margin-top: 2px; }
+  .award-chevron { color: var(--primary); font-size: 14px; }
+
+  /* Logic card */
+  .logic-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .note { color: var(--label-color); font-size: 10px; margin: 3px 0; line-height: 1.4; }
+  .note strong { color: var(--text); }
+
+  /* Buttons */
+  .btn-reset { background: rgba(255,77,77,0.05); border: 1px solid rgba(255,77,77,0.2); color: #a55; border-radius: 6px; padding: 4px 10px; font-size: 10px; cursor: pointer; }
+  .btn-lang { background: rgba(58,237,202,0.05); border: 1px solid rgba(58,237,202,0.2); color: var(--secondary); border-radius: 6px; padding: 4px 10px; font-size: 10px; cursor: pointer; }
+  .copy-btn { width: 100%; background: rgba(0,210,255,0.08); border: 1px solid rgba(0,210,255,0.2); color: var(--primary); border-radius: 6px; padding: 5px; font-size: 10px; margin-top: 6px; cursor: pointer; text-align: center; }
+
+  .new-badge { background: rgba(58,237,202,0.15); color: var(--secondary); font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 5px; }
+
+  .screens-wrap { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
+  .screen-col { text-align: center; }
+  .screen-lbl { font-size: 12px; color: #6c7086; margin-top: 6px; }
+</style>
+
+<h2>主畫面 — 桌面版 Before / After</h2>
+<p class="subtitle">1fr + 210px 兩欄佈局，右側 sidebar 是唯一改動區域</p>
+
+<div class="screens-wrap">
+
+  <!-- BEFORE -->
+  <div class="screen-col">
+    <div class="screen-lbl" style="margin-bottom:8px;color:#6c7086;">現在</div>
+    <div class="mock-app">
+      <div class="mock-header">
+        <span class="mock-h1">Payslip Checker</span>
+        <div style="display:flex;gap:6px;">
+          <span class="btn-reset">Reset</span>
+          <span class="btn-lang">中</span>
+        </div>
+      </div>
+      <div class="mock-body">
+        <!-- LEFT: Records -->
+        <div>
+          <div class="records-table">
+            <div class="records-thead">
+              <span>ON</span><span>DAY</span><span>START</span><span>END</span><span>Unpaid<br>Break</span><span>Holiday</span>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div>
+              <div class="day-label">Mon</div>
+              <div class="time-mock">06:00</div>
+              <div class="time-mock">16:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock off"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div>
+              <div class="day-label">Tue</div>
+              <div class="time-mock">06:00</div>
+              <div class="time-mock">16:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock off"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div>
+              <div class="day-label">Wed</div>
+              <div class="time-mock">06:00</div>
+              <div class="time-mock">16:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock off"></div>
+            </div>
+            <div class="records-row holiday">
+              <div class="check-mock"></div>
+              <div class="day-label">Thu</div>
+              <div class="time-mock">07:00</div>
+              <div class="time-mock">15:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock" style="background:rgba(255,77,77,0.3);border-color:#ff4d4d;"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div>
+              <div class="day-label">Fri</div>
+              <div class="time-mock">06:00</div>
+              <div class="time-mock">14:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock off"></div>
+            </div>
+            <div class="records-row disabled">
+              <div class="check-mock off"></div>
+              <div class="day-label" style="color:var(--label-color)">Sat</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">0</div>
+              <div class="check-mock off"></div>
+            </div>
+            <div class="records-row disabled">
+              <div class="check-mock off"></div>
+              <div class="day-label" style="color:var(--label-color)">Sun</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">0</div>
+              <div class="check-mock off"></div>
+            </div>
+          </div>
+
+          <!-- Rules card -->
+          <div class="mock-card">
+            <div class="logic-header">
+              <span class="mock-section-title" style="margin-bottom:0;">How It Works</span>
+              <span style="color:var(--label-color);">▼</span>
+            </div>
+            <div style="margin-top:8px;">
+              <p class="note">• <strong>Daily limit:</strong> 7.6h ordinary, then OT</p>
+              <p class="note">• <strong>Sat:</strong> ×1.5 first 3h, then ×2.0</p>
+              <p class="note">• <strong>Sun:</strong> ×2.0 (min 4h)</p>
+              <p class="note">• <strong>PH:</strong> ×2.0</p>
+              <p class="note">• <strong>Super:</strong> 12% of OTE</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div>
+          <!-- Rate card -->
+          <div class="mock-card">
+            <div class="mock-section-title">Hourly Rate</div>
+            <div class="rate-big" style="margin-bottom:10px;">
+              <span class="dollar">$</span>
+              <input value="32.15" readonly>
+            </div>
+            <div class="setting-row">
+              <span class="lbl">Min. Engagement</span>
+              <span>3h</span>
+            </div>
+            <div class="emp-toggle">
+              <span class="emp-btn active">Permanent</span>
+              <span class="emp-btn">Casual</span>
+            </div>
+          </div>
+
+          <!-- Pay Summary -->
+          <div class="mock-card">
+            <div class="mock-section-title">Pay Summary</div>
+            <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+            <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+            <div class="po-row"><span class="lbl">Holiday ×2.0</span><span>8.0h</span></div>
+            <hr class="sep">
+            <div class="po-row po-accent"><span>Gross Pay</span><span style="color:var(--primary);">$1,847.25</span></div>
+            <div class="po-row"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+            <div class="copy-btn">Copy Summary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-lbl">現在的桌面版</div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="screen-col">
+    <div class="screen-lbl" style="margin-bottom:8px;color:var(--secondary);">新版 <span style="color:#6c7086;font-size:10px;">(右側 sidebar 唯一改動)</span></div>
+    <div class="mock-app">
+      <div class="mock-header">
+        <span class="mock-h1">Payslip Checker</span>
+        <div style="display:flex;gap:6px;">
+          <span class="btn-reset">Reset</span>
+          <span class="btn-lang">中</span>
+        </div>
+      </div>
+      <div class="mock-body">
+        <!-- LEFT: 完全一樣 -->
+        <div>
+          <div class="records-table">
+            <div class="records-thead">
+              <span>ON</span><span>DAY</span><span>START</span><span>END</span><span>Unpaid<br>Break</span><span>Holiday</span>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div><div class="day-label">Mon</div>
+              <div class="time-mock">06:00</div><div class="time-mock">16:00</div>
+              <div class="time-mock">30</div><div class="check-mock off"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div><div class="day-label">Tue</div>
+              <div class="time-mock">06:00</div><div class="time-mock">16:00</div>
+              <div class="time-mock">30</div><div class="check-mock off"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div><div class="day-label">Wed</div>
+              <div class="time-mock">06:00</div><div class="time-mock">16:00</div>
+              <div class="time-mock">30</div><div class="check-mock off"></div>
+            </div>
+            <div class="records-row holiday">
+              <div class="check-mock"></div><div class="day-label">Thu</div>
+              <div class="time-mock">07:00</div><div class="time-mock">15:00</div>
+              <div class="time-mock">30</div>
+              <div class="check-mock" style="background:rgba(255,77,77,0.3);border-color:#ff4d4d;"></div>
+            </div>
+            <div class="records-row">
+              <div class="check-mock"></div><div class="day-label">Fri</div>
+              <div class="time-mock">06:00</div><div class="time-mock">14:00</div>
+              <div class="time-mock">30</div><div class="check-mock off"></div>
+            </div>
+            <div class="records-row disabled">
+              <div class="check-mock off"></div><div class="day-label" style="color:var(--label-color)">Sat</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div><div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">0</div><div class="check-mock off"></div>
+            </div>
+            <div class="records-row disabled">
+              <div class="check-mock off"></div><div class="day-label" style="color:var(--label-color)">Sun</div>
+              <div class="time-mock" style="opacity:0.4">--:--</div><div class="time-mock" style="opacity:0.4">--:--</div>
+              <div class="time-mock" style="opacity:0.4">0</div><div class="check-mock off"></div>
+            </div>
+          </div>
+
+          <!-- Rules card — badge 更新 -->
+          <div class="mock-card">
+            <div class="logic-header">
+              <span class="mock-section-title" style="margin-bottom:0;">How It Works <span style="background:rgba(58,237,202,0.12);color:var(--secondary);font-size:9px;padding:1px 6px;border-radius:3px;font-weight:700;letter-spacing:0;">GMP EA</span></span>
+              <span style="color:var(--label-color);">▼</span>
+            </div>
+            <div style="margin-top:8px;">
+              <p class="note">• <strong>Daily limit:</strong> 7.6h ordinary, then OT</p>
+              <p class="note">• <strong>Sat:</strong> ×1.5 first 3h, then ×2.0</p>
+              <p class="note">• <strong>Sun:</strong> ×2.0 (min 4h)</p>
+              <p class="note">• <strong>PH:</strong> ×2.0</p>
+              <p class="note">• <strong>Super:</strong> 12% of OTE</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Sidebar — 加了 Award row -->
+        <div>
+          <div class="mock-card">
+            <div class="mock-section-title">Hourly Rate</div>
+            <div class="rate-big" style="margin-bottom:10px;">
+              <span class="dollar">$</span>
+              <input value="32.15" readonly>
+            </div>
+            <div class="setting-row">
+              <span class="lbl">Min. Engagement</span>
+              <span>3h</span>
+            </div>
+            <div class="emp-toggle" style="margin-bottom:8px;">
+              <span class="emp-btn active">Permanent</span>
+              <span class="emp-btn">Casual</span>
+            </div>
+            <hr class="sep">
+            <!-- NEW: Award row -->
+            <div style="font-size:10px;color:var(--label-color);margin-bottom:4px;">Award / EA <span class="new-badge">NEW</span></div>
+            <div class="award-row">
+              <div>
+                <div class="award-name-val">GMP EA</div>
+                <div class="award-hint">Sat ×1.5 · Sun ×2.0 · PH ×2.0</div>
+              </div>
+              <span class="award-chevron">⌄</span>
+            </div>
+          </div>
+
+          <!-- Pay Summary — 一樣 -->
+          <div class="mock-card">
+            <div class="mock-section-title">Pay Summary</div>
+            <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+            <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+            <div class="po-row"><span class="lbl">Holiday ×2.0</span><span>8.0h</span></div>
+            <hr class="sep">
+            <div class="po-row po-accent"><span>Gross Pay</span><span style="color:var(--primary);">$1,847.25</span></div>
+            <div class="po-row"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+            <div class="copy-btn">Copy Summary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-lbl">新版桌面版</div>
+  </div>
+
+</div>

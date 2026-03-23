@@ -1,0 +1,97 @@
+<h2>Award Settings：要放在哪裡？怎麼開啟？</h2>
+<p class="subtitle">Employment Settings 區域加入 Award 選擇，三種互動方式比較</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>懸浮 Modal（Floating Modal）</h3>
+      <p>點擊 Employment Settings 的「⚙ Award 設定」按鈕，彈出一個覆蓋式視窗，裡面有 Award 下拉選單 + 自訂規則數值</p>
+      <div style="margin-top:10px;background:#1e1e2e;border-radius:8px;padding:12px;font-size:12px;color:#cdd6f4;">
+        <div style="background:#313244;border-radius:6px;padding:8px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#89b4fa;font-weight:600">⚙ Award Settings</span>
+          <span style="color:#6c7086;">✕</span>
+        </div>
+        <div style="padding:0 4px">
+          <div style="color:#a6adc8;font-size:11px;margin-bottom:4px">Select Award</div>
+          <div style="background:#45475a;border-radius:4px;padding:6px 10px;margin-bottom:8px;color:#cdd6f4;">MA000020 · Meat Industry Award ▾</div>
+          <div style="color:#a6adc8;font-size:11px;margin-bottom:4px">Penalty Rates</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+            <div style="background:#45475a;border-radius:4px;padding:5px 8px;">Sat ×1.5 (3h)</div>
+            <div style="background:#45475a;border-radius:4px;padding:5px 8px;">Sun ×2.0</div>
+            <div style="background:#45475a;border-radius:4px;padding:5px 8px;">OT1 ×1.5</div>
+            <div style="background:#45475a;border-radius:4px;padding:5px 8px;">OT2 ×2.0</div>
+          </div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;font-size:12px;">
+        <div class="pros"><h4>優點</h4><ul><li>不佔用主介面空間</li><li>熟悉的操作模式</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>需要額外點擊才能看到當前設定</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>側邊欄展開式（Inline Expand）</h3>
+      <p>Employment Settings 卡片內新增「Award」行，點擊後在原地展開顯示當前規則，可直接編輯數值</p>
+      <div style="margin-top:10px;background:#1e1e2e;border-radius:8px;padding:12px;font-size:12px;color:#cdd6f4;">
+        <div style="color:#89b4fa;font-weight:600;margin-bottom:8px">Employment Settings</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="color:#a6adc8">Min. Engagement</span><span>3h</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="color:#a6adc8">Type</span>
+          <span style="background:#45475a;padding:2px 8px;border-radius:4px">Permanent</span>
+        </div>
+        <div style="border-top:1px solid #45475a;margin:8px 0;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="color:#a6adc8">Award</span>
+          <span style="color:#89b4fa;font-size:11px">Meat Industry ▾</span>
+        </div>
+        <div style="background:#313244;border-radius:6px;padding:8px;font-size:11px;color:#a6adc8;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <div>Sat ×<span style="color:#cdd6f4">1.5</span></div>
+            <div>Sun ×<span style="color:#cdd6f4">2.0</span></div>
+            <div>OT1 ×<span style="color:#cdd6f4">1.5</span></div>
+            <div>OT2 ×<span style="color:#cdd6f4">2.0</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;font-size:12px;">
+        <div class="pros"><h4>優點</h4><ul><li>一眼看到當前 Award</li><li>不需切換頁面</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>側邊欄會變長</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>右上角設定頁（Settings Page）</h3>
+      <p>Header 加一個「⚙」按鈕，進入獨立設定頁面，可管理 Award 選擇、自訂規則、儲存多組 Profile</p>
+      <div style="margin-top:10px;background:#1e1e2e;border-radius:8px;padding:12px;font-size:12px;color:#cdd6f4;">
+        <div style="background:#181825;border-radius:6px;padding:8px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#cdd6f4">Payslip Checker</span>
+          <div style="display:flex;gap:8px;">
+            <span style="background:#313244;padding:3px 8px;border-radius:4px">Reset</span>
+            <span style="background:#89b4fa;color:#1e1e2e;padding:3px 8px;border-radius:4px;font-weight:600">⚙</span>
+          </div>
+        </div>
+        <div style="background:#313244;border-radius:6px;padding:8px 12px;font-size:11px;">
+          <div style="color:#89b4fa;margin-bottom:6px;font-weight:600">Settings</div>
+          <div style="margin-bottom:4px;">📋 Active Award: <span style="color:#a6e3a1">Meat Industry</span></div>
+          <div style="margin-bottom:4px;">🏭 Profiles: EA羊肉廠 / Meat Award / Custom</div>
+          <div style="color:#6c7086;">+ Add new profile</div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;font-size:12px;">
+        <div class="pros"><h4>優點</h4><ul><li>可管理多個 Profile</li><li>空間最大，功能最完整</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>開發量最多</li><li>需切換頁面</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

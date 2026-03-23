@@ -1,0 +1,152 @@
+<style>
+  :root {
+    --primary: #00d2ff;
+    --secondary: #3aedca;
+    --bg: #0f1115;
+    --card-bg: #1a1d23;
+    --text: #e0e6ed;
+    --border: #2d333d;
+    --input-bg: #24292f;
+    --label-color: #8b949e;
+  }
+  body { background: #181a1f; font-family: system-ui, -apple-system, sans-serif; }
+
+  .sidebar-mock { width: 210px; font-size: 11px; color: var(--text); }
+  .mock-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .section-title {
+    color: var(--secondary); font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 9px;
+  }
+  .rate-input { display: flex; align-items: center; gap: 4px; margin-bottom: 9px; }
+  .dollar { color: var(--label-color); font-size: 14px; }
+  .rate-val { color: var(--primary); font-size: 22px; font-weight: 700; }
+  .toggle { display: flex; gap: 3px; }
+  .tbtn { background: var(--input-bg); border: 1px solid var(--border); color: var(--label-color); border-radius: 5px; padding: 3px 10px; font-size: 10px; }
+  .tbtn.active { background: rgba(0,210,255,0.1); border-color: var(--primary); color: var(--primary); font-weight: 700; }
+  .tbtn.casual-active { background: rgba(245,194,231,0.1); border-color: #f5c2e7; color: #f5c2e7; font-weight: 700; }
+  .award-selector {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(0,210,255,0.04); border: 1px solid rgba(0,210,255,0.18);
+    border-radius: 7px; padding: 7px 9px; cursor: pointer; margin-bottom: 6px;
+  }
+  .award-name { color: var(--secondary); font-weight: 700; font-size: 12px; }
+  .po-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+  .gross-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; }
+  .lbl { color: var(--label-color); }
+  .sep { border: none; border-top: 1px solid var(--border); margin: 7px 0; }
+  .copy-btn {
+    width: 100%; background: rgba(0,210,255,0.06); border: 1px solid rgba(0,210,255,0.2);
+    color: var(--primary); border-radius: 6px; padding: 5px; font-size: 10px;
+    margin-top: 7px; text-align: center; cursor: pointer; box-sizing: border-box;
+  }
+  .screens { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .screen { text-align: center; }
+  .screen-lbl { font-size: 11px; color: #6c7086; margin-top: 6px; }
+</style>
+
+<h2>最終 Sidebar 設計</h2>
+<p class="subtitle">Option C 精簡版 — Award 卡非常乾淨，只在必要時多顯示一行</p>
+
+<div class="screens">
+
+  <!-- Permanent mode -->
+  <div class="screen">
+    <div class="sidebar-mock">
+      <!-- Award -->
+      <div class="mock-card">
+        <div class="section-title">Award</div>
+        <div class="award-selector">
+          <span class="award-name">GMP EA</span>
+          <span style="color:var(--primary);">⌄</span>
+        </div>
+        <div style="font-size:9px;color:#89b4fa;cursor:pointer;text-align:right;">View full details →</div>
+      </div>
+
+      <!-- Rate -->
+      <div class="mock-card">
+        <div class="section-title">Rate</div>
+        <div class="rate-input">
+          <span class="dollar">$</span>
+          <span class="rate-val">32.15</span>
+        </div>
+        <div class="toggle">
+          <span class="tbtn active">Permanent</span>
+          <span class="tbtn">Casual</span>
+        </div>
+      </div>
+
+      <!-- Pay Summary -->
+      <div class="mock-card">
+        <div class="section-title">Pay Summary</div>
+        <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+        <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+        <div class="po-row"><span class="lbl">Holiday</span><span>8.0h</span></div>
+        <hr class="sep">
+        <div class="gross-row"><span>Gross</span><span style="color:var(--primary);">$1,847.25</span></div>
+        <div class="po-row" style="margin-top:4px;"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+        <div class="copy-btn">Copy Summary</div>
+      </div>
+    </div>
+    <div class="screen-lbl">Permanent 模式</div>
+  </div>
+
+  <!-- Casual mode -->
+  <div class="screen">
+    <div class="sidebar-mock">
+      <!-- Award -->
+      <div class="mock-card">
+        <div class="section-title">Award</div>
+        <div class="award-selector">
+          <span class="award-name">GMP EA</span>
+          <span style="color:var(--primary);">⌄</span>
+        </div>
+        <div style="font-size:9px;color:#89b4fa;cursor:pointer;text-align:right;">View full details →</div>
+      </div>
+
+      <!-- Rate — casual shows base rate hint -->
+      <div class="mock-card">
+        <div class="section-title">Rate</div>
+        <div class="rate-input">
+          <span class="dollar">$</span>
+          <span class="rate-val" style="color:#f5c2e7;">32.15</span>
+        </div>
+        <div class="toggle" style="margin-bottom:7px;">
+          <span class="tbtn">Permanent</span>
+          <span class="tbtn casual-active">Casual</span>
+        </div>
+        <!-- Casual base rate hint — only shown when Casual selected -->
+        <div style="background:rgba(245,194,231,0.06);border:1px solid rgba(245,194,231,0.15);border-radius:6px;padding:5px 8px;font-size:10px;">
+          <span class="lbl">Base rate (÷1.25)</span>
+          <span style="color:#f5c2e7;font-weight:700;float:right;">$25.72</span>
+        </div>
+      </div>
+
+      <!-- Pay Summary -->
+      <div class="mock-card">
+        <div class="section-title">Pay Summary</div>
+        <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+        <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+        <div class="po-row"><span class="lbl">Holiday</span><span>8.0h</span></div>
+        <hr class="sep">
+        <div class="gross-row"><span>Gross</span><span style="color:var(--primary);">$1,902.50</span></div>
+        <div class="po-row" style="margin-top:4px;"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$98.78</span></div>
+        <div class="copy-btn">Copy Summary</div>
+      </div>
+    </div>
+    <div class="screen-lbl">Casual 模式<br><span style="font-size:10px;color:#a6adc8;">(多一行 base rate hint)</span></div>
+  </div>
+
+</div>
+
+<div style="max-width:460px;margin:20px auto 0;background:#1a1d23;border:1px solid #2d333d;border-radius:10px;padding:14px;font-size:12px;color:#e0e6ed;">
+  <div style="color:#3aedca;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">設計決策</div>
+  <div style="line-height:2;color:#8b949e;">
+    <div>✅ Award 卡只有 <strong style="color:#e0e6ed;">選擇器 + detail 連結</strong>，極簡</div>
+    <div>✅ Penalty rates 移到 <strong style="color:#e0e6ed;">How It Works 面板</strong>（本來就在那）</div>
+    <div>✅ Casual base rate <strong style="color:#e0e6ed;">只在 Casual 模式出現</strong>，不佔空間</div>
+    <div>✅ Award min 不顯示（GMP EA 沒有 classification 意義）</div>
+  </div>
+</div>

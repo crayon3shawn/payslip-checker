@@ -1,0 +1,42 @@
+<h2>怎樣改善 AU Payslip Checker？</h2>
+<p class="subtitle">目前只支援你們公司的 EA。不同 Award 的規則差很多 — 我們有幾個方向可以選</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>讓使用者自訂規則</h3>
+      <p>把 overtime 門檻、multiplier、casual loading 等數字做成可編輯欄位。使用者直接對照自己的 Award/EA 填入，計算引擎不變。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>優點</h4><ul><li>最靈活，任何 Award 都能用</li><li>實作簡單，改動小</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>使用者要自己看 Award 文件抄數字</li><li>容易填錯</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>內建幾個主要 Award preset</h3>
+      <p>預設幾個最常見的 Award（如 General Retail, Hospitality, Cleaning, Construction），使用者選 Award 後自動帶入對應規則。還是可以手動覆蓋。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>優點</h4><ul><li>方便，不用自己查 Award</li><li>有一定教育意義</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>要人工維護 Award 資料</li><li>Award 每年會更新，需要追蹤</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>只加入「EA vs Award」比較模式</h3>
+      <p>在現有的 EA 計算旁邊，增加一欄按照 National Minimum Wage Award 的標準計算，讓使用者直接看到差異。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>優點</h4><ul><li>清楚顯示 EA 是否優於 Award</li><li>對舉報 underpayment 有實際幫助</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>只對比一個固定 Award，範圍有限</li><li>UI 複雜度增加</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">點選你覺得最適合的方向，或在 terminal 直接告訴我</p>

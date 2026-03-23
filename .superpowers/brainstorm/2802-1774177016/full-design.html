@@ -1,0 +1,284 @@
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  h2 { margin-bottom: 4px; }
+
+  /* Phone mockup wrapper */
+  .phone { width: 260px; background: #1e1e2e; border-radius: 20px; border: 2px solid #313244; overflow: hidden; font-size: 11px; color: #cdd6f4; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .phone-header { background: #181825; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #313244; }
+  .phone-body { padding: 10px; }
+
+  /* Desktop mockup */
+  .desktop { width: 600px; background: #1e1e2e; border-radius: 12px; border: 2px solid #313244; font-size: 11px; color: #cdd6f4; overflow: hidden; }
+  .desktop-header { background: #181825; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #313244; }
+  .desktop-body { display: flex; gap: 0; min-height: 360px; }
+  .desktop-main { flex: 1; padding: 12px; border-right: 1px solid #313244; }
+  .desktop-sidebar { width: 180px; padding: 12px; }
+
+  /* Shared components */
+  .card { background: #313244; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+  .card-title { color: #89b4fa; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .btn-primary { background: #89b4fa; color: #1e1e2e; border-radius: 5px; padding: 5px 10px; font-size: 10px; font-weight: 700; display: inline-block; }
+  .btn-secondary { background: #313244; color: #cdd6f4; border-radius: 5px; padding: 5px 10px; font-size: 10px; display: inline-block; }
+  .tag { background: #1e1e2e; border-radius: 4px; padding: 2px 6px; font-size: 10px; }
+  .tag-blue { color: #89b4fa; }
+  .tag-green { color: #a6e3a1; }
+  .tag-pink { color: #f5c2e7; }
+  .tag-orange { color: #fab387; }
+  .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .muted { color: #6c7086; }
+  .sep { border: none; border-top: 1px solid #45475a; margin: 6px 0; }
+
+  /* Bottom sheet */
+  .bottom-sheet { background: #313244; border-radius: 12px 12px 0 0; padding: 10px; margin-top: 8px; }
+  .bs-handle { width: 28px; height: 3px; background: #6c7086; border-radius: 2px; margin: 0 auto 8px; }
+
+  /* Award list */
+  .award-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #45475a; }
+  .award-item:last-child { border-bottom: none; }
+  .award-dot { width: 6px; height: 6px; border-radius: 50%; background: #45475a; flex-shrink: 0; }
+  .award-dot.active { background: #a6e3a1; }
+  .award-name { color: #cdd6f4; flex: 1; }
+  .award-ma { color: #6c7086; font-size: 10px; }
+
+  .flow-section { margin-bottom: 24px; }
+  .flow-label { font-size: 12px; font-weight: 700; color: #6c7086; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid #313244; padding-bottom: 6px; }
+
+  .screens { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .screen-label { text-align: center; font-size: 11px; color: #6c7086; margin-top: 6px; }
+
+  .penalty-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .pm-cell { background: #1e1e2e; border-radius: 4px; padding: 4px 6px; }
+  .pm-label { color: #6c7086; font-size: 9px; }
+  .pm-val { color: #fab387; font-weight: 700; font-size: 11px; }
+</style>
+
+<h2>整體設計概覽</h2>
+<p class="subtitle">三個畫面流程：主畫面 → Award 選擇（Bottom Sheet）→ Award 詳細頁</p>
+
+<!-- SCREEN 1: Main View with Employment Settings -->
+<div class="flow-section">
+  <div class="flow-label">畫面 1 — 主畫面（Employment Settings 加入 Award 欄位）</div>
+  <div class="screens">
+
+    <!-- Mobile -->
+    <div>
+      <div class="phone">
+        <div class="phone-header">
+          <span style="font-weight:700;font-size:12px;">Payslip Checker</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="btn-secondary" style="font-size:9px;padding:3px 7px;">Reset</span>
+            <span style="background:#313244;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;">中</span>
+          </div>
+        </div>
+        <div class="phone-body">
+          <!-- Sidebar card: settings -->
+          <div class="card">
+            <div class="card-title">Employment Settings</div>
+            <div class="row"><span class="muted">Hourly Rate</span><strong style="color:#a6e3a1;">$32.15</strong></div>
+            <div class="row"><span class="muted">Min. Engagement</span><span>3h</span></div>
+            <div class="row"><span class="muted">Type</span>
+              <div style="display:flex;gap:3px;">
+                <span style="background:#1e3a5f;color:#89b4fa;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;">Perm</span>
+                <span style="background:#1e1e2e;color:#6c7086;border-radius:4px;padding:2px 7px;font-size:10px;">Casual</span>
+              </div>
+            </div>
+            <hr class="sep">
+            <!-- NEW: Award row -->
+            <div class="row" style="cursor:pointer;">
+              <span class="muted">Award / EA</span>
+              <div style="display:flex;align-items:center;gap:5px;">
+                <span style="color:#a6e3a1;font-weight:700;">GMP EA</span>
+                <span style="color:#89b4fa;font-size:12px;">⌄</span>
+              </div>
+            </div>
+            <div style="font-size:9px;color:#6c7086;margin-top:2px;">Sat ×1.5 · Sun ×2.0 · PH ×2.0</div>
+          </div>
+
+          <!-- Summary card -->
+          <div class="card">
+            <div class="card-title">Pay Summary</div>
+            <div class="row"><span class="muted">Ordinary</span><span>32.0h</span></div>
+            <div class="row"><span class="muted">Overtime ×1.5</span><span>3.0h</span></div>
+            <div class="row"><span class="muted">Holiday ×2.0</span><span>8.0h</span></div>
+            <hr class="sep">
+            <div class="row"><span style="font-weight:700;">Gross Pay</span><strong style="color:#a6e3a1;font-size:14px;">$1,847.25</strong></div>
+            <div class="row"><span class="muted">Super (12%)</span><span style="color:#89b4fa;">$123.45</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">主畫面（手機）</div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="font-size:20px;color:#45475a;align-self:center;">→</div>
+
+    <!-- Mobile: Bottom Sheet -->
+    <div>
+      <div class="phone">
+        <div class="phone-header">
+          <span style="font-weight:700;font-size:12px;">Payslip Checker</span>
+          <span class="muted">Reset 中</span>
+        </div>
+        <div class="phone-body" style="padding-bottom:0;">
+          <!-- blurred bg -->
+          <div style="opacity:0.3;pointer-events:none;">
+            <div class="card" style="margin-bottom:4px;">
+              <div class="row"><span class="muted">Hourly Rate</span><strong style="color:#a6e3a1;">$32.15</strong></div>
+              <div class="row"><span class="muted">Min. Engagement</span><span>3h</span></div>
+            </div>
+          </div>
+          <!-- Bottom Sheet -->
+          <div class="bottom-sheet">
+            <div class="bs-handle"></div>
+            <div style="font-weight:700;color:#cdd6f4;margin-bottom:8px;font-size:12px;">Select Award / EA</div>
+            <!-- Award list -->
+            <div class="award-item">
+              <div class="award-dot active"></div>
+              <div>
+                <div class="award-name" style="color:#a6e3a1;font-weight:700;">GMP EA</div>
+                <div class="award-ma">Company Agreement · Current</div>
+              </div>
+              <span style="color:#a6e3a1;font-size:12px;">✓</span>
+            </div>
+            <div class="award-item">
+              <div class="award-dot"></div>
+              <div>
+                <div class="award-name">Meat Industry Award</div>
+                <div class="award-ma">MA000033</div>
+              </div>
+              <span style="color:#89b4fa;font-size:10px;">ⓘ</span>
+            </div>
+            <div class="award-item">
+              <div class="award-dot"></div>
+              <div>
+                <div class="award-name">Security Award</div>
+                <div class="award-ma">MA000038</div>
+              </div>
+              <span style="color:#89b4fa;font-size:10px;">ⓘ</span>
+            </div>
+            <div class="award-item">
+              <div class="award-dot"></div>
+              <div>
+                <div class="award-name">Building Award</div>
+                <div class="award-ma">MA000020</div>
+              </div>
+              <span style="color:#89b4fa;font-size:10px;">ⓘ</span>
+            </div>
+            <div class="award-item" style="border:none;">
+              <div class="award-dot" style="background:#6c7086;"></div>
+              <div>
+                <div class="award-name muted">+ All 40 Awards...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Bottom Sheet（點 Award 欄）</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: Award Detail Page -->
+<div class="flow-section">
+  <div class="flow-label">畫面 3 — Award 詳細頁（點 ⓘ 進入）</div>
+  <div class="desktop">
+    <div class="desktop-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:#89b4fa;cursor:pointer;">← Back</span>
+        <span style="color:#6c7086;">|</span>
+        <span style="font-weight:700;">Meat Industry Award 2020</span>
+        <span class="tag tag-blue">MA000033</span>
+      </div>
+      <span class="btn-primary">Use this Award →</span>
+    </div>
+    <div class="desktop-body">
+      <!-- Main: Classification + Penalty + Breaks -->
+      <div class="desktop-main">
+        <!-- Classification -->
+        <div style="margin-bottom:10px;">
+          <div class="card-title" style="margin-bottom:6px;">Classification Level</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+            <span style="background:#1e3a5f;color:#89b4fa;border:1px solid #89b4fa;border-radius:5px;padding:4px 8px;font-weight:700;font-size:11px;">MI1 · $24.10</span>
+            <span style="background:#313244;color:#cdd6f4;border-radius:5px;padding:4px 8px;font-size:11px;">MI2 · $24.93</span>
+            <span style="background:#313244;color:#cdd6f4;border-radius:5px;padding:4px 8px;font-size:11px;">MI3 · $25.97</span>
+            <span style="background:#313244;color:#cdd6f4;border-radius:5px;padding:4px 8px;font-size:11px;">MI4 · $27.10</span>
+            <span style="background:#313244;color:#cdd6f4;border-radius:5px;padding:4px 8px;font-size:11px;">MI5 · $28.35</span>
+            <span style="background:#313244;color:#f5c2e7;border-radius:5px;padding:4px 8px;font-size:11px;">Casual +25%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#313244;border-radius:6px;padding:7px 10px;">
+            <span class="muted">Award min: $24.10 →</span>
+            <span class="muted">Your rate:</span>
+            <span style="background:#1e1e2e;border-radius:4px;padding:3px 8px;color:#a6e3a1;font-weight:700;">$<input type="number" value="32.15" style="background:none;border:none;color:#a6e3a1;font-weight:700;width:50px;outline:none;font-size:11px;"></span>
+            <span class="muted" style="font-size:9px;">override if EA pays above award</span>
+          </div>
+        </div>
+
+        <!-- Penalty Rates -->
+        <div style="margin-bottom:10px;">
+          <div class="card-title" style="margin-bottom:6px;">⚡ Penalty Rates</div>
+          <div class="penalty-mini">
+            <div class="pm-cell"><div class="pm-label">Saturday</div><div class="pm-val">×1.5</div></div>
+            <div class="pm-cell"><div class="pm-label">Sunday</div><div class="pm-val">×2.0</div></div>
+            <div class="pm-cell"><div class="pm-label">Public Holiday</div><div class="pm-val">×2.5</div></div>
+            <div class="pm-cell"><div class="pm-label">OT (first 2h)</div><div class="pm-val">×1.5</div></div>
+            <div class="pm-cell"><div class="pm-label">OT (after 2h)</div><div class="pm-val">×2.0</div></div>
+            <div class="pm-cell"><div class="pm-label">Afternoon shift</div><div class="pm-val" style="color:#89b4fa;">×1.15</div></div>
+          </div>
+        </div>
+
+        <!-- Break Rules -->
+        <div>
+          <div class="card-title" style="margin-bottom:6px;">☕ Break Rules</div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <tr style="color:#6c7086;">
+              <th style="text-align:left;padding:3px 6px;border-bottom:1px solid #313244;">Duration</th>
+              <th style="text-align:left;padding:3px 6px;border-bottom:1px solid #313244;">Meal</th>
+              <th style="text-align:left;padding:3px 6px;border-bottom:1px solid #313244;">Rest</th>
+              <th style="text-align:left;padding:3px 6px;border-bottom:1px solid #313244;">Paid</th>
+            </tr>
+            <tr style="color:#cdd6f4;">
+              <td style="padding:3px 6px;color:#6c7086;">&lt; 5h</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr style="color:#cdd6f4;">
+              <td style="padding:3px 6px;">5–8h</td><td>30 min</td><td>—</td><td style="color:#f38ba8;">Unpaid</td>
+            </tr>
+            <tr style="color:#cdd6f4;">
+              <td style="padding:3px 6px;">8–10h</td><td>30 min</td><td>10 min</td><td><span style="color:#f38ba8;">Meal unpaid</span> <span style="color:#a6e3a1;">Rest paid</span></td>
+            </tr>
+            <tr style="color:#cdd6f4;">
+              <td style="padding:3px 6px;">&gt; 10h</td><td>60 min</td><td>20 min</td><td><span style="color:#f38ba8;">Meal unpaid</span> <span style="color:#a6e3a1;">Rest paid</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sidebar: Key info -->
+      <div class="desktop-sidebar">
+        <div class="card-title">Key Info</div>
+        <div class="row"><span class="muted">Min Engagement</span><span>3h</span></div>
+        <div class="row"><span class="muted">Standard Week</span><span>38h</span></div>
+        <div class="row"><span class="muted">Super</span><span class="tag-blue">12%</span></div>
+        <div class="row"><span class="muted">Casual Loading</span><span>25%</span></div>
+        <hr class="sep">
+        <div class="muted" style="font-size:10px;margin-bottom:6px;">Last verified: Jul 2025</div>
+        <div style="font-size:9px;color:#45475a;line-height:1.4;">Data sourced from Fair Work Commission. Verify with your employer for EA-specific rules.</div>
+        <hr class="sep">
+        <div class="card-title" style="margin-top:4px;">Other Awards</div>
+        <div style="font-size:11px;color:#89b4fa;margin-bottom:4px;cursor:pointer;">Security Award (MA000038)</div>
+        <div style="font-size:11px;color:#89b4fa;margin-bottom:4px;cursor:pointer;">Building Award (MA000020)</div>
+        <div style="font-size:11px;color:#6c7086;cursor:pointer;">Browse all 40 Awards...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="background:#1e1e2e;border:1px solid #313244;border-radius:10px;padding:14px;max-width:640px;margin-top:8px;">
+  <div style="color:#89b4fa;font-weight:700;font-size:12px;margin-bottom:8px;">🏗 架構總結</div>
+  <div style="font-size:12px;color:#cdd6f4;line-height:1.8;">
+    <div>📁 <strong>src/data/awards.ts</strong> — 全部 40 個 Award + GMP EA 寫死</div>
+    <div>💾 <strong>localStorage</strong> — 記住使用者選了哪個 Award + custom 設定</div>
+    <div>🎨 <strong>frontend-design skill</strong> — 實作 UI（深色主題延續現有風格）</div>
+    <div>📱 <strong>Bottom Sheet</strong> — 手機友善的 Award 切換</div>
+    <div>📄 <strong>Award 詳細頁</strong> — Classification 選擇 + Penalty Rates + Break Rules</div>
+  </div>
+</div>

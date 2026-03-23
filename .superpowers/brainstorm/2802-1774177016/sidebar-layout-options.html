@@ -1,0 +1,258 @@
+<style>
+  :root {
+    --primary: #00d2ff;
+    --secondary: #3aedca;
+    --bg: #0f1115;
+    --card-bg: #1a1d23;
+    --text: #e0e6ed;
+    --border: #2d333d;
+    --input-bg: #24292f;
+    --label-color: #8b949e;
+  }
+
+  body { background: #181a1f; font-family: system-ui, -apple-system, sans-serif; }
+
+  .sidebar-mock {
+    width: 210px;
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  .mock-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .section-title {
+    color: var(--secondary);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 9px;
+  }
+
+  .rate-input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 9px;
+  }
+  .dollar { color: var(--label-color); font-size: 14px; }
+  .rate-val { color: var(--primary); font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+
+  .lbl { color: var(--label-color); }
+  .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .sep { border: none; border-top: 1px solid var(--border); margin: 7px 0; }
+
+  .toggle { display: flex; gap: 3px; }
+  .tbtn { background: var(--input-bg); border: 1px solid var(--border); color: var(--label-color); border-radius: 5px; padding: 3px 10px; font-size: 10px; }
+  .tbtn.active { background: rgba(0,210,255,0.1); border-color: var(--primary); color: var(--primary); font-weight: 700; }
+
+  /* Award selector row */
+  .award-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,210,255,0.04);
+    border: 1px solid rgba(0,210,255,0.18);
+    border-radius: 7px;
+    padding: 7px 9px;
+    cursor: pointer;
+  }
+  .award-name { color: var(--secondary); font-weight: 700; font-size: 12px; }
+  .award-chevron { color: var(--primary); }
+  .award-rates { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .rate-tag {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 9px;
+    color: var(--label-color);
+  }
+  .rate-tag span { color: #fab387; font-weight: 700; }
+
+  /* Pay summary */
+  .po-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+  .gross-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; }
+
+  .col-label { font-size: 10px; color: #6c7086; text-align: center; margin-bottom: 6px; }
+  .option-label { display: inline-block; background: rgba(0,210,255,0.1); color: var(--primary); border-radius: 4px; padding: 2px 8px; font-size: 9px; font-weight: 700; margin-bottom: 6px; }
+
+  .screens { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+  .screen { text-align: center; }
+
+  .recommended-badge {
+    background: rgba(166,227,161,0.15);
+    color: #a6e3a1;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+  }
+
+  .copy-btn {
+    width: 100%;
+    background: rgba(0,210,255,0.06);
+    border: 1px solid rgba(0,210,255,0.2);
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 5px;
+    font-size: 10px;
+    margin-top: 7px;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+</style>
+
+<h2>Sidebar 版面編排建議</h2>
+<p class="subtitle">移除 Min. Engagement 後，三種卡片分組方式</p>
+
+<div class="screens">
+
+  <!-- Option A: 合在一張卡 (現在的方式，只刪 Min Eng) -->
+  <div class="screen">
+    <div class="option-label">A</div>
+    <div class="col-label">全部合在一張卡<br><span style="color:#45475a;">(刪 Min Eng，其餘不變)</span></div>
+    <div class="sidebar-mock">
+      <div class="mock-card">
+        <div class="section-title">Employment Settings</div>
+        <div class="rate-input">
+          <span class="dollar">$</span>
+          <span class="rate-val">32.15</span>
+        </div>
+        <div class="toggle" style="margin-bottom:8px;">
+          <span class="tbtn active">Permanent</span>
+          <span class="tbtn">Casual</span>
+        </div>
+        <hr class="sep">
+        <div class="lbl" style="font-size:9px;margin-bottom:5px;">Award</div>
+        <div class="award-selector">
+          <span class="award-name">GMP EA</span>
+          <span class="award-chevron">⌄</span>
+        </div>
+        <div class="award-rates">
+          <span class="rate-tag">Sat <span>×1.5</span></span>
+          <span class="rate-tag">Sun <span>×2.0</span></span>
+          <span class="rate-tag">PH <span>×2.0</span></span>
+        </div>
+      </div>
+
+      <div class="mock-card">
+        <div class="section-title">Pay Summary</div>
+        <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+        <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+        <div class="po-row"><span class="lbl">Holiday</span><span>8.0h</span></div>
+        <hr class="sep">
+        <div class="gross-row"><span>Gross</span><span style="color:var(--primary);">$1,847.25</span></div>
+        <div class="po-row" style="margin-top:4px;"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+        <div class="copy-btn">Copy Summary</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: 兩張卡分開 (推薦) -->
+  <div class="screen">
+    <div class="option-label" style="background:rgba(166,227,161,0.15);color:#a6e3a1;">B <span class="recommended-badge">推薦</span></div>
+    <div class="col-label">Rate / Award 分兩張卡<br><span style="color:#a6e3a1;">視覺層次最清晰</span></div>
+    <div class="sidebar-mock">
+
+      <!-- Card 1: Rate -->
+      <div class="mock-card" style="border-color:rgba(0,210,255,0.2);">
+        <div class="section-title">Rate</div>
+        <div class="rate-input">
+          <span class="dollar">$</span>
+          <span class="rate-val">32.15</span>
+        </div>
+        <div class="toggle">
+          <span class="tbtn active">Permanent</span>
+          <span class="tbtn">Casual</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Award -->
+      <div class="mock-card" style="border-color:rgba(58,237,202,0.15);">
+        <div class="section-title">Award</div>
+        <div class="award-selector">
+          <span class="award-name">GMP EA</span>
+          <span class="award-chevron">⌄</span>
+        </div>
+        <div class="award-rates">
+          <span class="rate-tag">Sat <span>×1.5</span></span>
+          <span class="rate-tag">Sun <span>×2.0</span></span>
+          <span class="rate-tag">PH <span>×2.0</span></span>
+          <span class="rate-tag">OT <span>×1.5/2.0</span></span>
+        </div>
+        <div style="margin-top:6px;font-size:9px;color:#89b4fa;cursor:pointer;">View full details →</div>
+      </div>
+
+      <!-- Card 3: Pay Summary -->
+      <div class="mock-card">
+        <div class="section-title">Pay Summary</div>
+        <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+        <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+        <div class="po-row"><span class="lbl">Holiday</span><span>8.0h</span></div>
+        <hr class="sep">
+        <div class="gross-row"><span>Gross</span><span style="color:var(--primary);">$1,847.25</span></div>
+        <div class="po-row" style="margin-top:4px;"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+        <div class="copy-btn">Copy Summary</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C: Award 放最上面 -->
+  <div class="screen">
+    <div class="option-label">C</div>
+    <div class="col-label">Award 優先<br><span style="color:#45475a;">先選規則，再輸入 Rate</span></div>
+    <div class="sidebar-mock">
+
+      <!-- Card 1: Award (first) -->
+      <div class="mock-card">
+        <div class="section-title">Award</div>
+        <div class="award-selector">
+          <span class="award-name">GMP EA</span>
+          <span class="award-chevron">⌄</span>
+        </div>
+        <div class="award-rates">
+          <span class="rate-tag">Sat <span>×1.5</span></span>
+          <span class="rate-tag">Sun <span>×2.0</span></span>
+          <span class="rate-tag">PH <span>×2.0</span></span>
+        </div>
+      </div>
+
+      <!-- Card 2: Rate (second) -->
+      <div class="mock-card">
+        <div class="section-title">Rate</div>
+        <div class="rate-input">
+          <span class="dollar">$</span>
+          <span class="rate-val">32.15</span>
+        </div>
+        <div style="font-size:9px;color:var(--label-color);margin-bottom:7px;">Award min: <span style="color:#6c7086;">$24.10</span> (MI1)</div>
+        <div class="toggle">
+          <span class="tbtn active">Permanent</span>
+          <span class="tbtn">Casual</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Pay Summary -->
+      <div class="mock-card">
+        <div class="section-title">Pay Summary</div>
+        <div class="po-row"><span class="lbl">Ordinary</span><span>32.0h</span></div>
+        <div class="po-row"><span class="lbl">OT ×1.5</span><span>3.0h</span></div>
+        <div class="po-row"><span class="lbl">Holiday</span><span>8.0h</span></div>
+        <hr class="sep">
+        <div class="gross-row"><span>Gross</span><span style="color:var(--primary);">$1,847.25</span></div>
+        <div class="po-row" style="margin-top:4px;"><span class="lbl">Super 12%</span><span style="color:var(--secondary);">$123.45</span></div>
+        <div class="copy-btn">Copy Summary</div>
+      </div>
+    </div>
+  </div>
+
+</div>

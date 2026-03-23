@@ -1,0 +1,229 @@
+<style>
+  .award-page { max-width: 720px; margin: 0 auto; font-size: 13px; }
+  .award-header { background: #1e1e2e; border: 1px solid #313244; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .award-badge { display: inline-block; background: #313244; color: #89b4fa; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
+  .award-title { color: #cdd6f4; font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+  .award-subtitle { color: #6c7086; font-size: 11px; margin-bottom: 14px; }
+
+  .section-card { background: #1e1e2e; border: 1px solid #313244; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+  .section-heading { color: #89b4fa; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+  /* Classification selector */
+  .class-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+  .class-btn { background: #313244; border: 1px solid #45475a; border-radius: 6px; padding: 7px 4px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .class-btn:hover { border-color: #89b4fa; }
+  .class-btn.active { background: #1e3a5f; border-color: #89b4fa; }
+  .class-btn .c-level { color: #89b4fa; font-weight: 700; font-size: 12px; }
+  .class-btn .c-rate { color: #a6e3a1; font-size: 11px; }
+
+  /* Rate input row */
+  .rate-input-section { background: #313244; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .rate-display { flex: 1; min-width: 140px; }
+  .rate-display .rd-label { color: #6c7086; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .rate-display .rd-value { color: #a6e3a1; font-size: 22px; font-weight: 700; }
+  .rate-edit { flex: 1; min-width: 160px; }
+  .rate-edit .re-label { color: #6c7086; font-size: 10px; text-transform: uppercase; margin-bottom: 4px; }
+  .rate-edit-input { display: flex; align-items: center; gap: 4px; background: #1e1e2e; border: 1px solid #45475a; border-radius: 6px; padding: 6px 10px; }
+  .rate-edit-input span { color: #a6adc8; }
+  .rate-edit-input input { background: none; border: none; color: #cdd6f4; font-size: 15px; font-weight: 700; width: 80px; outline: none; }
+  .rate-hint { color: #6c7086; font-size: 10px; margin-top: 4px; }
+
+  /* Penalty cards */
+  .penalty-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .penalty-card { background: #313244; border-radius: 8px; padding: 10px 12px; }
+  .penalty-card .p-label { color: #6c7086; font-size: 10px; margin-bottom: 4px; }
+  .penalty-card .p-rate { color: #fab387; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .penalty-card .p-dollars { color: #cdd6f4; font-size: 12px; }
+  .penalty-card .p-note { color: #6c7086; font-size: 10px; margin-top: 3px; }
+
+  /* Break rules */
+  .break-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .break-table th { color: #6c7086; text-align: left; padding: 5px 8px; border-bottom: 1px solid #313244; font-weight: 600; font-size: 11px; }
+  .break-table td { padding: 7px 8px; color: #cdd6f4; border-bottom: 1px solid #313244; }
+  .break-table tr:last-child td { border-bottom: none; }
+  .tag-paid { background: #1a3a2a; color: #a6e3a1; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .tag-unpaid { background: #3a1a1a; color: #f38ba8; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+
+  /* Min engagement + other rules */
+  .rules-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rule-chip { background: #313244; border-radius: 8px; padding: 9px 12px; flex: 1; min-width: 120px; }
+  .rule-chip .r-label { color: #6c7086; font-size: 10px; text-transform: uppercase; margin-bottom: 3px; }
+  .rule-chip .r-value { color: #cdd6f4; font-size: 14px; font-weight: 700; }
+  .rule-chip .r-sub { color: #6c7086; font-size: 10px; margin-top: 2px; }
+
+  .use-btn { display: block; width: 100%; background: #89b4fa; color: #1e1e2e; border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 700; text-align: center; cursor: pointer; margin-top: 4px; }
+
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; color: #89b4fa; font-size: 12px; margin-bottom: 12px; cursor: pointer; }
+
+  @media (max-width: 500px) {
+    .penalty-grid { grid-template-columns: repeat(2, 1fr); }
+    .class-selector { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+
+<div class="award-page">
+  <div class="back-btn">← All Awards</div>
+
+  <!-- Header -->
+  <div class="award-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+      <div>
+        <div class="award-badge">MA000033 · Meat Industry</div>
+        <div class="award-title">Meat Industry Award 2020</div>
+        <div class="award-subtitle">Abattoir worker, Boner, Slaughterer, Meat inspector, Freezer hand</div>
+      </div>
+      <span style="background:#313244;border-radius:6px;padding:4px 9px;font-size:10px;color:#6c7086;white-space:nowrap;">Jul 2025</span>
+    </div>
+
+    <!-- Classification Selector -->
+    <div class="section-heading" style="margin-bottom:8px;">📋 Classification Level</div>
+    <div class="class-selector">
+      <div class="class-btn active" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level">MI1</div>
+        <div class="c-rate">$24.10</div>
+      </div>
+      <div class="class-btn" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level">MI2</div>
+        <div class="c-rate">$24.93</div>
+      </div>
+      <div class="class-btn" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level">MI3</div>
+        <div class="c-rate">$25.97</div>
+      </div>
+      <div class="class-btn" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level">MI4</div>
+        <div class="c-rate">$27.10</div>
+      </div>
+      <div class="class-btn" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level">MI5</div>
+        <div class="c-rate">$28.35</div>
+      </div>
+      <div class="class-btn" style="border-style:dashed;" onclick="document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">
+        <div class="c-level" style="color:#f5c2e7;">CAS</div>
+        <div class="c-rate" style="color:#f5c2e7;">+25%</div>
+      </div>
+    </div>
+
+    <!-- Hourly Rate Input -->
+    <div class="rate-input-section">
+      <div class="rate-display">
+        <div class="rd-label">Award Minimum</div>
+        <div class="rd-value">$24.10<span style="font-size:13px;color:#6c7086;">/hr</span></div>
+      </div>
+      <div style="color:#45475a;font-size:18px;">→</div>
+      <div class="rate-edit">
+        <div class="re-label">Your Actual Rate</div>
+        <div class="rate-edit-input">
+          <span>$</span>
+          <input type="number" value="32.15" step="0.01">
+          <span style="color:#6c7086;font-size:11px;">/hr</span>
+        </div>
+        <div class="rate-hint">Override if your EA pays above award</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Penalty Rates -->
+  <div class="section-card">
+    <div class="section-heading">⚡ Penalty Rates</div>
+    <div class="penalty-grid">
+      <div class="penalty-card">
+        <div class="p-label">Saturday</div>
+        <div class="p-rate">×1.5</div>
+        <div class="p-dollars">$48.23/hr</div>
+      </div>
+      <div class="penalty-card">
+        <div class="p-label">Sunday</div>
+        <div class="p-rate">×2.0</div>
+        <div class="p-dollars">$64.30/hr</div>
+      </div>
+      <div class="penalty-card">
+        <div class="p-label">Public Holiday</div>
+        <div class="p-rate">×2.5</div>
+        <div class="p-dollars">$80.38/hr</div>
+      </div>
+      <div class="penalty-card">
+        <div class="p-label">Overtime (first 2h)</div>
+        <div class="p-rate">×1.5</div>
+        <div class="p-dollars">$48.23/hr</div>
+      </div>
+      <div class="penalty-card">
+        <div class="p-label">Overtime (after 2h)</div>
+        <div class="p-rate">×2.0</div>
+        <div class="p-dollars">$64.30/hr</div>
+      </div>
+      <div class="penalty-card">
+        <div class="p-label">Afternoon Shift</div>
+        <div class="p-rate">×1.15</div>
+        <div class="p-dollars">$37.00/hr</div>
+        <div class="p-note">After 6pm</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Break Rules -->
+  <div class="section-card">
+    <div class="section-heading">☕ Break Rules</div>
+    <table class="break-table">
+      <thead>
+        <tr>
+          <th>Shift Duration</th>
+          <th>Meal Break</th>
+          <th>Rest Break</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#6c7086;">Under 5 hours</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>5 – 8 hours</td>
+          <td>30 min</td>
+          <td>—</td>
+          <td><span class="tag-unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td>8 – 10 hours</td>
+          <td>30 min</td>
+          <td>10 min</td>
+          <td><span class="tag-unpaid">Meal unpaid</span> <span class="tag-paid">Rest paid</span></td>
+        </tr>
+        <tr>
+          <td>Over 10 hours</td>
+          <td>60 min</td>
+          <td>20 min</td>
+          <td><span class="tag-unpaid">Meal unpaid</span> <span class="tag-paid">Rest paid</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Other Rules -->
+  <div class="section-card">
+    <div class="section-heading">📌 Other Rules</div>
+    <div class="rules-row">
+      <div class="rule-chip">
+        <div class="r-label">Min Engagement</div>
+        <div class="r-value">3 hours</div>
+        <div class="r-sub">Minimum paid per shift</div>
+      </div>
+      <div class="rule-chip">
+        <div class="r-label">Standard Hours</div>
+        <div class="r-value">38 hrs/week</div>
+        <div class="r-sub">Full-time ordinary hours</div>
+      </div>
+      <div class="rule-chip">
+        <div class="r-label">Super</div>
+        <div class="r-value">12%</div>
+        <div class="r-sub">of Ordinary Time Earnings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Use this Award CTA -->
+  <button class="use-btn">Use this Award in Calculator →</button>
+</div>
