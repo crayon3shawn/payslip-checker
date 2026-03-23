@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { type DailyRecord, getResults, type EmploymentType } from '../utils/calculator';
-import { AU_REGS } from '../constants/regulations';
+import { AWARDS, getAwardById, DEFAULT_AWARD_ID, type AwardConfig } from '../data/awards';
 
 const INITIAL_DAYS = [
   { id: 1, en: 'Mon', cn: '週一' },
@@ -18,43 +18,51 @@ export interface UIRecord extends DailyRecord {
 }
 
 export function usePayslip() {
+  const [selectedAwardId, setSelectedAwardId] = useState<string>(() =>
+    localStorage.getItem('selectedAwardId') ?? DEFAULT_AWARD_ID
+  );
+
+  const award: AwardConfig = useMemo(
+    () => getAwardById(selectedAwardId) ?? AWARDS[0],
+    [selectedAwardId]
+  );
+
   const [hourlyRate, setHourlyRate] = useState<number>(() => {
     const saved = localStorage.getItem('hourlyRate');
-    return saved ? parseFloat(saved) : AU_REGS.DEFAULT_HOURLY_RATE;
+    return saved ? parseFloat(saved) : award.defaultHourlyRate;
   });
 
-  const [minEngagement, setMinEngagement] = useState<number>(() => {
-    const saved = localStorage.getItem('minEngagement');
-    return saved ? parseFloat(saved) : AU_REGS.MIN_ENGAGEMENT_HOURS;
-  });
+  const [empType, setEmpType] = useState<EmploymentType>(() =>
+    (localStorage.getItem('empType') as EmploymentType) ?? 'casual'
+  );
 
-  const [empType, setEmpType] = useState<EmploymentType>(() => {
-    const saved = localStorage.getItem('empType');
-    return (saved as EmploymentType) || 'casual';
-  });
-
-  const getDefaultRecords = (): UIRecord[] => INITIAL_DAYS.map((d) => ({
-    id: d.id,
-    day: d.en,
-    dayCn: d.cn,
-    enabled: d.id <= 5,
-    startTime: AU_REGS.DEFAULT_START,
-    endTime: AU_REGS.DEFAULT_END,
-    breakMinutes: AU_REGS.UNPAID_BREAK_DURATION,
-    isHoliday: false,
-  }));
+  const getDefaultRecords = (a: AwardConfig): UIRecord[] =>
+    INITIAL_DAYS.map((d) => ({
+      id: d.id, day: d.en, dayCn: d.cn,
+      enabled: d.id <= 5,
+      startTime: a.defaultStartTime,
+      endTime: a.defaultEndTime,
+      breakMinutes: a.defaultBreakMinutes,
+      isHoliday: false,
+    }));
 
   const [records, setRecords] = useState<UIRecord[]>(() => {
     const saved = localStorage.getItem('payslipRecords');
     if (saved) return JSON.parse(saved);
-    return getDefaultRecords();
+    return getDefaultRecords(award);
   });
 
   useEffect(() => {
+    localStorage.setItem('selectedAwardId', selectedAwardId);
+  }, [selectedAwardId]);
+
+  useEffect(() => {
     localStorage.setItem('hourlyRate', hourlyRate.toString());
-    localStorage.setItem('minEngagement', minEngagement.toString());
+  }, [hourlyRate]);
+
+  useEffect(() => {
     localStorage.setItem('empType', empType);
-  }, [hourlyRate, minEngagement, empType]);
+  }, [empType]);
 
   useEffect(() => {
     localStorage.setItem('payslipRecords', JSON.stringify(records));
@@ -65,35 +73,28 @@ export function usePayslip() {
   };
 
   const resetAllData = () => {
-    setHourlyRate(AU_REGS.DEFAULT_HOURLY_RATE);
-    setMinEngagement(AU_REGS.MIN_ENGAGEMENT_HOURS);
+    setHourlyRate(award.defaultHourlyRate);
     setEmpType('casual');
-    setRecords(getDefaultRecords());
+    setRecords(getDefaultRecords(award));
   };
 
-  // Calculate dynamic daily limit based on enabled days (excluding weekends for the 38h division)
   const dailyLimit = useMemo(() => {
     const enabledDaysCount = records.filter(r => r.enabled && r.id <= 5).length;
-    if (enabledDaysCount === 0) return 7.6;
-    return Math.round((AU_REGS.WEEKLY_STANDARD_HOURS / enabledDaysCount) * 100) / 100;
-  }, [records]);
+    if (enabledDaysCount === 0) return award.weeklyStandardHours / 5;
+    return Math.round((award.weeklyStandardHours / enabledDaysCount) * 100) / 100;
+  }, [records, award]);
 
-  const results = useMemo(() => 
-    getResults(records, hourlyRate, empType, dailyLimit, minEngagement), 
-    [records, hourlyRate, empType, dailyLimit, minEngagement]
+  const results = useMemo(
+    () => getResults(records, hourlyRate, empType, dailyLimit, award),
+    [records, hourlyRate, empType, dailyLimit, award]
   );
 
   return {
-    hourlyRate,
-    setHourlyRate,
-    minEngagement,
-    setMinEngagement,
-    empType,
-    setEmpType,
-    records,
-    updateRecord,
-    results,
-    dailyLimit,
-    resetAllData
+    award, selectedAwardId, setSelectedAwardId,
+    hourlyRate, setHourlyRate,
+    empType, setEmpType,
+    records, updateRecord,
+    results, dailyLimit,
+    resetAllData,
   };
 }
