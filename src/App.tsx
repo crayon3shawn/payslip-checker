@@ -6,17 +6,21 @@ import { en } from './locales/en';
 import { formatPaySummary } from './utils/formatters';
 import { ResetModal } from './components/ResetModal';
 import { MainView } from './components/MainView';
+import { AwardSelector } from './components/AwardSelector';
+import { AwardDetailPage } from './components/AwardDetailPage';
 
 function App() {
   const [lang, setLang] = useState<'en' | 'tw'>('en');
   const [showRules, setShowRules] = useState(true);
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showAwardSelector, setShowAwardSelector] = useState(false);
+  const [detailAwardId, setDetailAwardId] = useState<string | null>(null);
   const [isPulsing, setIsPulsing] = useState(false);
 
   const {
+    award, selectedAwardId, setSelectedAwardId,
     hourlyRate, setHourlyRate,
-    minEngagement, setMinEngagement,
     empType, setEmpType,
     records, updateRecord,
     results, resetAllData
@@ -37,6 +41,19 @@ function App() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleUseAward = (awardId: string, newHourlyRate: number) => {
+    setSelectedAwardId(awardId);
+    setHourlyRate(newHourlyRate);
+    setDetailAwardId(null);
+  };
+
+  const DAY_NAMES: Record<number, { en: string; tw: string }> = {
+    1: { en: 'Mon', tw: '週一' }, 2: { en: 'Tue', tw: '週二' },
+    3: { en: 'Wed', tw: '週三' }, 4: { en: 'Thu', tw: '週四' },
+    5: { en: 'Fri', tw: '週五' }, 6: { en: 'Sat', tw: '週六' },
+    7: { en: 'Sun', tw: '週日' },
   };
 
   const renderRule = (text: string) => {
@@ -67,20 +84,27 @@ function App() {
     </div>
   );
 
-  // Day names for daily hours section
-  const DAY_NAMES: Record<number, { en: string; tw: string }> = {
-    1: { en: 'Mon', tw: '週一' },
-    2: { en: 'Tue', tw: '週二' },
-    3: { en: 'Wed', tw: '週三' },
-    4: { en: 'Thu', tw: '週四' },
-    5: { en: 'Fri', tw: '週五' },
-    6: { en: 'Sat', tw: '週六' },
-    7: { en: 'Sun', tw: '週日' },
-  };
-
   const SidebarContent = (
     <>
-      {/* HOURLY RATE */}
+      {/* AWARD CARD */}
+      <div className="sidebar-card">
+        <h3 className="section-title">{t.awardLabel}</h3>
+        <button
+          className="award-selector-btn"
+          onClick={() => setShowAwardSelector(true)}
+        >
+          <span className="award-selector-name">{award.shortName}</span>
+          <span className="award-selector-chevron">⌄</span>
+        </button>
+        <button
+          className="award-detail-link"
+          onClick={() => setDetailAwardId(award.id)}
+        >
+          {t.viewFullDetails} →
+        </button>
+      </div>
+
+      {/* RATE CARD */}
       <div className="sidebar-card">
         <h3 className="section-title">{t.hourlyRateLabel}</h3>
         <div className="rate-input-row">
@@ -90,34 +114,25 @@ function App() {
               type="number"
               step="0.01"
               value={hourlyRate || ''}
-              onFocus={(e) => e.target.select()}
-              onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+              onFocus={e => e.target.select()}
+              onChange={e => setHourlyRate(parseFloat(e.target.value) || 0)}
             />
           </div>
         </div>
-        <div className="emp-settings-compact">
-          <div className="setting-row-mini">
-            <span className="setting-label">{t.minEngLabel}</span>
-            <div className="input-with-symbol mini">
-              <input
-                type="number"
-                step="0.5"
-                value={minEngagement || ''}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => setMinEngagement(parseFloat(e.target.value) || 0)}
-              />
-            </div>
-          </div>
-          <div className="emp-toggle">
-            <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>{t.permanent}</button>
-            <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>{t.casual}</button>
-          </div>
-          {empType === 'casual' && (
-            <div className="base-rate-hint">
-              {t.baseRateHint}: <strong>${results.baseRate}</strong>
-            </div>
-          )}
+        <div className="emp-toggle">
+          <button className={empType === 'permanent' ? 'active' : ''} onClick={() => setEmpType('permanent')}>
+            {t.permanent}
+          </button>
+          <button className={empType === 'casual' ? 'active' : ''} onClick={() => setEmpType('casual')}>
+            {t.casual}
+          </button>
         </div>
+        {empType === 'casual' && (
+          <div className="casual-base-rate-hint">
+            <span>{t.casualBaseRate}</span>
+            <strong>${results.baseRate}</strong>
+          </div>
+        )}
       </div>
 
       {/* PAY OVERVIEW */}
@@ -144,7 +159,9 @@ function App() {
             </strong>
           </div>
           <div className="po-row po-super">
-            <span className="po-label">{t.super} (12%)</span>
+            <span className="po-label">
+              {t.super} ({(award.superRate * 100).toFixed(0)}%)
+            </span>
             <strong className="po-amount po-super-amount">
               ${results.superGuarantee.toLocaleString(undefined, { minimumFractionDigits: 3 })}
             </strong>
@@ -160,7 +177,7 @@ function App() {
         <div className="sidebar-card">
           <h3 className="section-title">{t.details}</h3>
           <div className="daily-hours-list">
-            {results.dailyBreakdown.map((d) => {
+            {results.dailyBreakdown.map(d => {
               const names = DAY_NAMES[d.id];
               const dayName = lang === 'en' ? names?.en : names?.tw;
               return (
@@ -192,6 +209,29 @@ function App() {
     </div>
   );
 
+  // Award Detail Page takes over full content area
+  if (detailAwardId) {
+    return (
+      <div className="container">
+        <header>
+          <h1>{t.title}</h1>
+          <div className="header-right">
+            <button className="lang-toggle-circle" onClick={() => setLang(lang === 'en' ? 'tw' : 'en')}>
+              {lang === 'en' ? '中' : 'EN'}
+            </button>
+          </div>
+        </header>
+        <AwardDetailPage
+          t={t}
+          awardId={detailAwardId}
+          currentHourlyRate={hourlyRate}
+          onUseAward={handleUseAward}
+          onBack={() => setDetailAwardId(null)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <header>
@@ -209,13 +249,29 @@ function App() {
 
       <MainView
         t={t} lang={lang} records={records} updateRecord={updateRecord}
-        showRules={showRules} setShowRules={setShowRules} renderRuleContent={renderRuleContent}
+        showRules={showRules} setShowRules={setShowRules}
+        renderRuleContent={renderRuleContent}
+        awardShortName={award.shortName}
         Sidebar={SidebarContent}
         ResourceLinks={ResourceLinks}
       />
 
       {showResetModal && (
-        <ResetModal t={t} onConfirm={() => { resetAllData(); setShowResetModal(false); }} onCancel={() => setShowResetModal(false)} />
+        <ResetModal
+          t={t}
+          onConfirm={() => { resetAllData(); setShowResetModal(false); }}
+          onCancel={() => setShowResetModal(false)}
+        />
+      )}
+
+      {showAwardSelector && (
+        <AwardSelector
+          t={t}
+          currentAwardId={selectedAwardId}
+          onSelect={setSelectedAwardId}
+          onViewDetail={id => { setShowAwardSelector(false); setDetailAwardId(id); }}
+          onClose={() => setShowAwardSelector(false)}
+        />
       )}
 
       <footer className="version-footer">
@@ -228,9 +284,9 @@ function App() {
               GitHub
             </a>
             <span className="dot">·</span>
-            <span className="v-tag-small">v1.7.7</span>
+            <span className="v-tag-small">v1.8.0</span>
           </div>
-          <p className="privacy-msg-en">No data leaves your device. All calculations are performed locally.</p>
+          <p className="privacy-msg-en">{t.privacy}</p>
           <div className="footer-row license-line">
             <span>Licensed under CC BY 4.0</span>
           </div>

@@ -10,6 +10,7 @@ interface Props {
   showRules: boolean;
   setShowRules: (v: boolean) => void;
   renderRuleContent: () => ReactNode;
+  awardShortName: string;
   Sidebar: ReactNode;
   ResourceLinks: ReactNode;
 }
@@ -17,7 +18,7 @@ interface Props {
 export function MainView({
   t, lang, records, updateRecord,
   showRules, setShowRules, renderRuleContent,
-  Sidebar, ResourceLinks,
+  awardShortName, Sidebar, ResourceLinks,
 }: Props) {
   return (
     <div className="main-layout">
@@ -96,7 +97,10 @@ export function MainView({
 
         <div className="logic-card flat-block">
           <div className="logic-header" onClick={() => setShowRules(!showRules)}>
-            <h3 className="section-title">{t.howItWorks}</h3>
+            <h3 className="section-title">
+              {t.howItWorks}
+              <span className="award-rules-badge">{awardShortName}</span>
+            </h3>
             <span className={`arrow ${showRules ? 'up' : ''}`}>▼</span>
           </div>
           {showRules && renderRuleContent()}

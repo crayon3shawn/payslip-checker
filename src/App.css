@@ -538,3 +538,63 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
   .penalty-grid { grid-template-columns: repeat(2, 1fr); }
   .other-rules-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* === Award Card in Sidebar === */
+.award-selector-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: rgba(0, 210, 255, 0.04);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+.award-selector-btn:hover { border-color: var(--primary); }
+.award-selector-name { color: var(--secondary); font-weight: 700; font-size: 0.95rem; }
+.award-selector-chevron { color: var(--primary); font-size: 1.1rem; }
+
+.award-detail-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  text-align: right;
+  width: 100%;
+  display: block;
+  opacity: 0.8;
+}
+.award-detail-link:hover { opacity: 1; text-decoration: underline; }
+
+/* Casual base rate hint */
+.casual-base-rate-hint {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--label-color);
+}
+.casual-base-rate-hint strong { color: var(--text); }
+
+/* Award badge in rules panel */
+.award-rules-badge {
+  display: inline-block;
+  background: rgba(58, 237, 202, 0.1);
+  color: var(--secondary);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
