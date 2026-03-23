@@ -362,3 +362,179 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
   opacity: 0.7;
 }
 .award-row-info-btn:hover { opacity: 1; }
+
+/* === Award Detail Page === */
+.award-detail-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+  box-sizing: border-box;
+}
+
+.award-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.award-back-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.award-back-btn:hover { text-decoration: underline; }
+
+.btn-use-award {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-use-award:hover { opacity: 0.85; }
+
+.award-detail-title-card {
+  margin-bottom: 1rem;
+}
+
+.award-ma-badge {
+  display: inline-block;
+  background: rgba(0, 210, 255, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.award-detail-name {
+  color: var(--text);
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.award-detail-body { display: flex; flex-direction: column; gap: 0; }
+
+/* Classification grid */
+.classification-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.class-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  min-width: 70px;
+}
+.class-btn:hover { border-color: var(--primary); }
+.class-btn-active {
+  background: rgba(0, 210, 255, 0.1);
+  border-color: var(--primary);
+}
+
+.class-code { display: block; color: var(--primary); font-weight: 700; font-size: 0.85rem; }
+.class-rate { display: block; color: var(--secondary); font-size: 0.75rem; }
+
+.rate-override-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.lbl-small { color: var(--label-color); font-size: 0.85rem; }
+.hint-text { color: var(--label-color); font-size: 0.75rem; margin: 0; }
+
+/* Penalty grid */
+.penalty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.penalty-card {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.penalty-label { color: var(--label-color); font-size: 0.75rem; margin-bottom: 4px; }
+.penalty-value { color: #fab387; font-size: 1rem; font-weight: 700; }
+.penalty-muted { color: var(--label-color) !important; }
+.penalty-note { color: var(--label-color); font-size: 0.7rem; margin-top: 3px; }
+
+/* Break table */
+.break-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.break-table th {
+  color: var(--label-color);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+.break-table td {
+  padding: 7px 8px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.break-table tr:last-child td { border-bottom: none; }
+
+.tag-paid {
+  background: rgba(166, 227, 161, 0.1);
+  color: #a6e3a1;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.tag-unpaid {
+  background: rgba(243, 139, 168, 0.1);
+  color: #f38ba8;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Other rules */
+.other-rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.rule-chip {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.rule-chip-label { color: var(--label-color); font-size: 0.75rem; margin-bottom: 3px; }
+.rule-chip-value { color: var(--text); font-size: 1rem; font-weight: 700; }
+
+@media (max-width: 600px) {
+  .penalty-grid { grid-template-columns: repeat(2, 1fr); }
+  .other-rules-grid { grid-template-columns: repeat(2, 1fr); }
+}
