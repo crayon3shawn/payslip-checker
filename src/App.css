@@ -286,3 +286,79 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
   /* Pay overview mobile */
   .po-accent { margin: 0; }
 }
+
+/* === Award Selector === */
+.award-selector-sheet {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 12px 16px 24px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto auto 0;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.award-selector-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+
+.award-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.award-selector-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.award-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.award-row:hover { background: rgba(0, 210, 255, 0.04); }
+.award-row:last-child { border-bottom: none; }
+
+.award-row-active { background: rgba(0, 210, 255, 0.06); }
+
+.award-row-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.award-row-active .award-row-dot { background: var(--secondary); }
+
+.award-row-info { flex: 1; }
+.award-row-name { color: var(--text); font-size: 0.9rem; display: block; }
+.award-row-ma { color: var(--label-color); font-size: 0.75rem; }
+.award-row-active .award-row-name { color: var(--secondary); font-weight: 600; }
+
+.award-row-check { color: var(--secondary); font-size: 0.9rem; }
+
+.award-row-info-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+.award-row-info-btn:hover { opacity: 1; }
